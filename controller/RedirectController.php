@@ -24,18 +24,18 @@ class RedirectController extends Controller {
     // Naparsuje URL adresu podle lomítek a vrátí pole parametrů
     private function parseURL($url) {
 //        // odstranění všeho, co je za otazníkem
-//        $parsedURL = substr($url, strpos($url, "?") + 1);
-//
-//        $pole = explode("&", $parsedURL);
-//        $temp = array();
-//        $i = 0;
-//        foreach ($pole as $item) {
-//            $itemParts = explode("=", $item);
-//            $temp[$i++] = $itemParts[1];
-//        }
-//
-//        return $temp;
-//
+        $parsedURL = substr($url, strpos($url, "?") + 1);
+
+        $pole = explode("&", $parsedURL);
+        $temp = array();
+        $i = 0;
+        foreach ($pole as $item) {
+            $itemParts = explode("=", $item);
+            $temp[$i++] = $itemParts[1];
+        }
+
+        return $temp;
+
 //        //var_dump($temp);
 
         // Naparsuje jednotlivé části URL adresy do asociativního pole

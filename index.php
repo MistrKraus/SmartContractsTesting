@@ -6,6 +6,9 @@
  * Time: 15:49
  */
 
+$GLOBALS['isLocal'] = ($_SERVER["HTTP_HOST"] == "localhost");
+//echo $isLocal;
+//exit();
 session_start();
 
 mb_internal_encoding("UTF-8");

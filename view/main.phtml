@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <title>Red-i <?= $title ?></title>
+<?php if (!$GLOBALS['isLocal']) { ?>
+    <base href="/~krausp/">
+<?php } ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="resources/styles.css">
@@ -17,22 +20,22 @@
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
-    <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
+    <a href="?Controler=javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
     <div class="w3-container">
         <h3 class="w3-padding-24"><b>Red - i<br>Correction</b></h3>
     </div>
     <div class="w3-bar-block">
-        <a href="intro" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
-        <a href="createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
-        <a href="findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
-        <a href="myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
+        <a href="?Controler=intro" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
+        <a href="?Controler=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
+        <a href="?Controler=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
+        <a href="?Controler=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
         <div class="w3-hide-large">
             <br>
             <?php if (!isset($_SESSION['loggedin'])) {?>
-                <a href="settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+                <a href="?Controler=settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
             <?php } else { ?>
-                <a href="login" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
-                <a href="registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
+                <a href="?Controler=login" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+                <a href="?Controler=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
             <?php }?>
         </div>
     </div>
@@ -40,7 +43,7 @@
 
 <!-- Top menu on small screens -->
 <header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
-    <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
+    <a href="?Controler=javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
     <span>Red-i Correction</span>
 </header>
 
@@ -51,10 +54,10 @@
     <!-- Sign in/up large -->
     <div class="w3-hide-small" style="float: right;">
         <?php if (isset($_SESSION['logedin'])) {?>
-            <a href="settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
+            <a href="?Controler=settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
         <?php } else { ?>
-            <a href="login" class="w3-btn w3-round-large red-border no-border">Sign in</a>
-            <a href="registration" class="w3-btn w3-round-large red-border no-border">Sign up</a>
+            <a href="?Controler=login" class="w3-btn w3-round-large red-border no-border">Sign in</a>
+            <a href="?Controler=registration" class="w3-btn w3-round-large red-border no-border">Sign up</a>
         <?php }?>
     </div>
     <!-- !PAGE CONTENT! -->
