@@ -1,0 +1,123 @@
+<div class="w3-row">
+    <h2><b>Sent For Correction</b></h2>
+    <!-- OPEN -->
+    <h2 class="w3-text-red">Open</h2>
+    <div class="w3-col l12">
+        <div class="w3-row w3-hide-small">
+            <div class="w3-row l8">
+                <div class="w3-col l2">Title</div>
+                <div class="w3-col l2">Deadline</div>
+                <div class="w3-col l2">Ethereum</div>
+                <div class="w3-col l2">User</div>
+            </div>
+        </div>
+        <?php
+        $i = 0;
+        foreach ($sentOpen as $work) { ?>
+            <button class="w3-col l8 accordion">
+                <div class="w3-col l3" ><?=$work['label']?></div>
+                <div class="w3-col l3" ><?=$work['deadline']?></div>
+                <div class="w3-col l3" ><?=$work['eth']?></div>
+                <div class="w3-col l2" ><?=$work['user']?></div>
+            </button>
+            <div class="w3-col l8 panel" style="align-content: center">
+                <form type="POST">
+                    <input type="submit" value="Cancel Order" name="cancelOrder<?=$i?>"
+                           class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                </form>
+            </div>
+            <?php $i++; }?>
+    </div>
+    <div class="w3-col l12">
+    <!-- CLOSED -->
+        <h2 class="w3-text-red">Closed</h2>
+        <div class="w3-row w3-hide-small">
+            <div class="w3-row l8">
+                <div class="w3-col l2">Title</div>
+                <div class="w3-col l2">Received</div>
+                <div class="w3-col l2">Ethereum</div>
+                <div class="w3-col l2">User</div>
+            </div>
+        </div>
+        <?php
+        $i = 0;
+        foreach ($sentClosed as $work) { ?>
+            <button class="w3-col l8 accordion">
+                <div class="w3-col l3" ><?=$work['label']?></div>
+                <div class="w3-col l3" ><?=$work['received']?></div>
+                <div class="w3-col l3" ><?=$work['eth']?></div>
+                <div class="w3-col l2" ><?=$work['user']?></div>
+            </button>
+            <div class="w3-col l8 panel" style="align-content: center">
+                <form type="POST">
+                    <input type="submit" value="Download File" name="downloadFile<?=$i?>"
+                           class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                </form>
+                    <a class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent; text-align: center">Send Review</a>
+            </div>
+        <?php $i++; }?>
+        <br>
+    </div>
+</div>
+<br><br>
+<div class="w3-col">
+    <h2><b>My Corrections</b></h2>
+    <div class="w3-col l12">
+    <!-- OPEN -->
+        <h2 class="w3-text-red">Open</h2>
+        <div class="w3-row w3-hide-small">
+            <div class="w3-row l8">
+                <div class="w3-col l2">Title</div>
+                <div class="w3-col l2">Deadline</div>
+                <div class="w3-col l2">Ethereum</div>
+                <div class="w3-col l2">User</div>
+            </div>
+        </div>
+        <?php
+        $i = 0;
+        foreach ($correctingOpen as $work) { ?>
+            <button class="w3-col l8 accordion">
+                <div class="w3-col l3" ><?=$work['label']?></div>
+                <div class="w3-col l3" ><?=$work['deadline']?></div>
+                <div class="w3-col l3" ><?=$work['eth']?></div>
+                <div class="w3-col l2" ><?=$work['user']?></div>
+            </button>
+            <div class="w3-col l8 panel" style="align-content: center">
+                <form type="POST">
+                    <label><input type="submit" value="Upload File" name="downloadFile<?=$i?>"
+                           class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                        File name.
+                    </label>
+                    <input type="submit" value="Cancel" name="cancelMyCorrection<?=$i?>"
+                           class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                </form>
+            </div>
+        <?php $i++; }?>
+        <br>
+    </div>
+    <div class="w3-col l12">
+    <!-- CLOSED -->
+        <h2 class="w3-text-red">Closed</h2>
+        <div class="w3-row w3-hide-small">
+            <div class="w3-row l8">
+                <div class="w3-col l2">Title</div>
+                <div class="w3-col l2">Received</div>
+                <div class="w3-col l2">Ethereum</div>
+                <div class="w3-col l2">User</div>
+            </div>
+        </div>
+        <?php
+        $i = 0;
+        foreach ($correctingClosed as $work) { ?>
+            <button class="w3-col l8 accordion">
+                <div class="w3-col l3" ><?=$work['label']?></div>
+                <div class="w3-col l3" ><?=$work['received']?></div>
+                <div class="w3-col l3" ><?=$work['eth']?></div>
+                <div class="w3-col l2" ><?=$work['user']?></div>
+            </button>
+            <div class="w3-col l8 panel" style="text-align: center">
+                INSERT REVIEW
+            </div>
+        <?php $i++; }?>
+    </div>
+</div>

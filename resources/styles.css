@@ -1,0 +1,99 @@
+.footer {
+    height:24px; // Replace with the height your footer should be
+    width: 100%; // Don't change
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    position: fixed;
+    bottom: 0pt;
+    left: 0pt;
+}
+
+.footer_contents {
+    height:24px;
+    width: 1000px;
+    margin:auto;
+}
+
+.no-border {
+    /*border-radius: 5px;*/
+    border:solid 2px transparent !important;
+    /*background: rgba(255, 255, 255,0);*/
+}
+
+.red-border:hover {
+    border:solid 2px #f44336 !important;
+    box-shadow: none !important;
+}
+
+.green-border:hover {
+    border:solid 2px red !important;
+    box-shadow: none !important;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.grid-item {
+    padding-bottom: 1.2em;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: transparent;
+    cursor: pointer;
+    width: 66%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+.accordion:after {
+    content: '\002B'; /* Unicode character for "plus" sign (+) */
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+    background-color: #f44336;/*#f1f1f1;*/
+    color: white;
+}
+
+.active:after {
+    content: "\2212"; /* Unicode character for "minus" sign (-) */
+}
+
+/* Animated collapse*/
+.panel {
+    /*padding: 0 18px;*/
+    background-color: rgba(244, 67, 54, 0.1);
+    /*background-color: rgb(241, 241, 241);*/
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}

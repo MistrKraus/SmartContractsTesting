@@ -1,0 +1,29 @@
+<!-- Table of offers for large -->
+<div class="w3-row w3-hide-small">
+    <div class="w3-row l8">
+        <div class="w3-col l2">Title</div>
+        <div class="w3-col l2">Pages</div>
+        <div class="w3-col l2">Difficulty</div>
+        <div class="w3-col l2">Deadline</div>
+    </div>
+</div>
+<?php
+$i = 0;
+foreach ($works as $work) { ?>
+    <button class="w3-col l8 accordion">
+        <div class="w3-col l3" ><?=$work['label']?></div>
+        <div class="w3-col l3" ><?=$work['pages']?></div>
+        <div class="w3-col l3" ><?=$work['diff']?></div>
+        <div class="w3-col l2" ><?=$work['deadline']?></div>
+    </button>
+    <div class="w3-col l8 panel" style="align-content: center">
+        <form type="POST">
+            <div class="w3-col l8"><?=$work['message']?></div>
+            <div style="position: relative; bottom: 0;">
+                <input class="w3-col l2" type="number" min="0.000" step="0.0001" name="eth<?=$i?>">
+                <div class="w3-col l1" align="center">ETH</div>
+                <input class="w3-col l1 w3-round-large red-border no-border" style="background-color: transparent" name="submit" type="submit" value="Bind">
+            </div>
+        </form>
+    </div>
+<?php $i++; }?>

@@ -1,0 +1,37 @@
+<form method="post" class="col-md-12">
+    <div class="col-md-4">Uživatelské jméno</div>
+        <div class="col-md-8">
+            <input name="userName" type="text"
+                     value="<?php if(isset($_SESSION['userName'])) echo $_SESSION['userName'];?>">
+            <?php if (isset($error[0])) {?>
+                <span class="glyphicon glyphicon-pencil wrongInput"></span>
+                <span><?= $error[0]?></span>
+            <?php } ?>
+        </div>
+    <div class="col-md-4">Heslo</div>
+        <div class="col-md-8">
+            <input name="passW" type="password"
+                     value="<?php if(isset($_SESSION['passW'])) echo $_SESSION['passW'];?>">
+            <?php if (isset($error[1])) {?>
+                <span class="glyphicon glyphicon-pencil wrongInput"></span>
+                <span><?= $error[1]?></span>
+            <?php } ?>
+        </div>
+    <div class="col-md-4">Heslo znovu</div>
+        <div class="col-md-8">
+            <input name="passWA" type="password"
+                     value="<?php if(isset($_SESSION['passWA'])) echo $_SESSION['passWA'];?>">
+            <?php if (isset($error[2])) {?>
+                <span class="glyphicon glyphicon-pencil wrongInput"></span>
+                <span><?= $error[2]?></span>
+            <?php } ?>
+        </div>
+    <div class="col-md-12" style="margin-top: 1.5em">
+        <div class="col-md-9" style="font-size: small;">
+            Po úspěšné registraci budete automaticky přihlášeni a přesměrováni zpět.
+        </div>
+        <div class="col-md-3" align="right">
+            <input class="btn" type="submit" value="Registrovat">
+        </div>
+    </div>
+</form>

@@ -1,0 +1,26 @@
+<form method="post">
+    <div class="w3-row-padding">
+        <div class="w3-half">
+            <div>Title</div>
+            <input name="label" type="text" maxlength="16" value="<?php if(isset($_SESSION['label'])) echo $_SESSION['label'];?>">
+            <br><br>
+            <div>No. of pages</div>
+            <input name="pages" type="number" min="1" value="<?php if(isset($_SESSION['pages'])) echo $_SESSION['pages'];?>">
+            <br><br>
+            <div>Difficulty</div>
+            <input name="pages" type="number" min="1" max="5" value="<?php if(isset($_SESSION['diff'])) echo $_SESSION['diff'];?>">
+            <br><br>
+            <div>Deadline</div>
+            <input name="deadline" type="date" value="<?php if(isset($_SESSION['deadline'])) echo $_SESSION['deadline'];?>">
+            <br><br>
+            <div>File</div>
+            <input class="w3-btn w3-round-large" value="Upload">
+        </div>
+        <div class="w3-half">
+            <div>Optional message:</div>
+            <textarea rows="12" cols="50" maxlength="400" style="resize: none" name="message"><?php if(isset($_SESSION['message'])) echo $_SESSION['message'];?></textarea>
+            <br>
+            <input class="w3-btn w3-round-large red-border no-border" type="submit" value="Create">
+        </div>
+    </div>
+</form>
