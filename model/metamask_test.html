@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="meta_mask.js"></script>
+</head>
+<body>
+
+<p><a id="list" href="#" onClick="this.innerHTML = get_current_metamask_address();">account</a></p>
+<p><a id="list" href="#" onClick="this.innerHTML = deploy_contract('0x3a9f0ae7f6f836e9af683177048b52730176bba1', 2, 0);">contract address</a></p>
+<p><a id="list" href="#" onClick="this.innerHTML = get_latest_contract_address();">contract address</a></p>
+
+<script>
+    document.write(get_contract_data());
+    console.log(get_contract_abi());
+    set_current_metamask_address();
+</script>
+
+</body>
+</html>

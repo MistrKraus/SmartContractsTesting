@@ -4,5 +4,27 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHP" type="php">
+        <CLASSES>
+          <root url="file://C:/ProgramData/Microsoft/Windows/Start Menu/Programs/JetBrains" />
+          <root url="file://C:/wamp64/bin/php/php7.1.9" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file://C:/ProgramData/Microsoft/Windows/Start Menu/Programs/JetBrains" />
+          <root url="file://C:/wamp64/bin/php/php7.1.9" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="PHARS">
+        <CLASSES>
+          <root url="phar://C:/wamp64/bin/php/php7.1.9/pharcommand.phar/" />
+        </CLASSES>
+        <SOURCES>
+          <root url="phar://C:/wamp64/bin/php/php7.1.9/pharcommand.phar/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
