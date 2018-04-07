@@ -30,14 +30,22 @@ class CreateDemandController extends Controller {
         $isOk = true;
 
         if (!isset($_POST['label']) || !$_POST['label']) {
+            //TODO
             $isOk = false;
         }
 
         if (!isset($_POST['pages']) || !$_POST['pages']) {
+            //TODO
             $isOk = false;
         }
 
         if (!isset($_POST['deadline']) || !$_POST['deadline']) {
+            //TODO
+            $isOk = false;
+        }
+
+        if (!isset($_POST['diff']) || !$_POST['diff']) {
+            //TODO
             $isOk = false;
         }
 
@@ -50,5 +58,6 @@ class CreateDemandController extends Controller {
     }
 
     function clearController() {
+
     }
 }
