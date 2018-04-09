@@ -31,8 +31,7 @@ class Db
      * @param $heslo
      * @param $databaze
      */
-    public static function connect($host, $uzivatel, $heslo, $databaze)
-    {
+    public static function connect($host, $uzivatel, $heslo, $databaze) {
         if (!isset(self::$connection)) {
             self::$connection = @new PDO(
                 "mysql:host=$host;dbname=$databaze",

@@ -25,17 +25,17 @@
         <h3 class="w3-padding-24"><b>Red - i<br>Correction</b></h3>
     </div>
     <div class="w3-bar-block">
-        <a href="?Controler=intro" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
-        <a href="?Controler=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
-        <a href="?Controler=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
-        <a href="?Controler=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
+        <a href="?Controller=intro" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
+        <a href="?Controller=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
+        <a href="?Controller=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
+        <a href="?Controller=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
         <div class="w3-hide-large">
             <br>
             <?php if (!isset($_SESSION['loggedin'])) {?>
-                <a href="?Controler=settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+                <a href="?Controller=settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
             <?php } else { ?>
-                <a href="?Controler=login" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
-                <a href="?Controler=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
+                <a href="?Controller=login" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+                <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
             <?php }?>
         </div>
     </div>
@@ -54,10 +54,10 @@
     <!-- Sign in/up large -->
     <div class="w3-hide-small" style="float: right;">
         <?php if (isset($_SESSION['logedin'])) {?>
-            <a href="?Controler=settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
+            <a href="?Controller=settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
         <?php } else { ?>
-            <a href="?Controler=login" class="w3-btn w3-round-large red-border no-border">Sign in</a>
-            <a href="?Controler=registration" class="w3-btn w3-round-large red-border no-border">Sign up</a>
+            <a href="?Controller=login" class="w3-btn w3-round-large red-border no-border">Sign in</a>
+            <a href="?Controller=registration" class="w3-btn w3-round-large red-border no-border">Sign up</a>
         <?php }?>
     </div>
     <!-- !PAGE CONTENT! -->
@@ -67,6 +67,9 @@
         <hr style="width:50px;border:5px solid red" class="w3-round">
     </div>
     <div class="w3-container">
+        <?php foreach ($messages as $message) : ?>
+            <p class="zprava"><?= $message ?></p>
+        <?php endforeach ?>
         <?php $this->controller->buildView(); ?>
     </div>
 </div>

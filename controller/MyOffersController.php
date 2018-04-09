@@ -17,32 +17,68 @@ class MyOffersController extends Controller {
 
         $this->checkLogin();
 
+        //TODO
+//        $_SESSION['sentBinds'] = Work::getSentBindsCorrections();
+//        $_SESSION['sentOpen'] = Work::getOpenSentCorrections();
+//        $_SESSION['sentClosed'] = Work::getClosedSentCorrections();
+//        $_SESSION['correctingBinds'] = Work::getMyBinds();
+//        $_SESSION['correctingOpen'] = Work::getOpenMyCorrections();
+//        $_SESSION['correctingClosed'] = Work::getClosedMyCorrections();
+
         for ($i = 0; $i < 5; $i++) {
-            $this->data['sentOpen'][$i]['label'] = "Name";
-            $this->data['sentOpen'][$i]['deadline'] = rand(0, 20);
-            $this->data['sentOpen'][$i]['eth'] = rand(0.0, 1.0);
-            $this->data['sentOpen'][$i]['user'] = "Name";
+            $_SESSION['sentBinds'][$i]['label'] = "Name";
+            $_SESSION['sentBinds'][$i]['deadline'] = rand(0, 20);
+            $_SESSION['sentBinds'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['sentBinds'][$i]['user'] = "Name";
         }
 
         for ($i = 0; $i < 5; $i++) {
-            $this->data['sentClosed'][$i]['label'] = "Name";
-            $this->data['sentClosed'][$i]['received'] = rand(0, 20);
-            $this->data['sentClosed'][$i]['eth'] = rand(0.0, 1.0);
-            $this->data['sentClosed'][$i]['user'] = "Name";
+            $_SESSION['sentOpen'][$i]['label'] = "Name";
+            $_SESSION['sentOpen'][$i]['deadline'] = rand(0, 20);
+            $_SESSION['sentOpen'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['sentOpen'][$i]['user'] = "Name";
         }
 
         for ($i = 0; $i < 5; $i++) {
-            $this->data['correctingOpen'][$i]['label'] = "Name";
-            $this->data['correctingOpen'][$i]['deadline'] = rand(0, 20);
-            $this->data['correctingOpen'][$i]['eth'] = rand(0.0, 1.0);
-            $this->data['correctingOpen'][$i]['user'] = "Name";
+            $_SESSION['sentClosed'][$i]['label'] = "Name";
+            $_SESSION['sentClosed'][$i]['received'] = rand(0, 20);
+            $_SESSION['sentClosed'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['sentClosed'][$i]['user'] = "Name";
         }
 
         for ($i = 0; $i < 5; $i++) {
-            $this->data['correctingClosed'][$i]['label'] = "Name";
-            $this->data['correctingClosed'][$i]['received'] = rand(0, 20);
-            $this->data['correctingClosed'][$i]['eth'] = rand(0.0, 1.0);
-            $this->data['correctingClosed'][$i]['user'] = "Name";
+            $_SESSION['myBinds'][$i]['label'] = "Name";
+            $_SESSION['myBinds'][$i]['deadline'] = rand(0, 20);
+            $_SESSION['myBinds'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['myBinds'][$i]['user'] = "Name";
+        }
+
+        for ($i = 0; $i < 5; $i++) {
+            $_SESSION['correctingOpen'][$i]['label'] = "Name";
+            $_SESSION['correctingOpen'][$i]['deadline'] = rand(0, 20);
+            $_SESSION['correctingOpen'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['correctingOpen'][$i]['user'] = "Name";
+        }
+
+        for ($i = 0; $i < 5; $i++) {
+            $_SESSION['correctingClosed'][$i]['label'] = "Name";
+            $_SESSION['correctingClosed'][$i]['received'] = rand(0, 20);
+            $_SESSION['correctingClosed'][$i]['eth'] = rand(0, 1000) / 1000;
+            $_SESSION['correctingClosed'][$i]['user'] = "Name";
+        }
+
+        if ($_POST) {
+            foreach ($_SESSION['sentBinds']['id'] as $id) {
+                if ($_POST['rejectBind'.$id]) {
+                    Work::rejectBind($id);
+                }
+            }
+
+            foreach ($_SESSION['sentOpen']['id'] as $id) {
+                if ($_POST['cancelOrder'.$id]) {
+                    Work::cancleOrder($id);
+                }
+            }
         }
     }
 

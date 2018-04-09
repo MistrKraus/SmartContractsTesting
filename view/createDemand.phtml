@@ -1,4 +1,4 @@
-<form method="post">
+<form method="POST">
     <div class="w3-row-padding">
         <div class="w3-half">
             <div>Title</div>
@@ -8,7 +8,7 @@
             <input name="pages" type="number" min="1" value="<?php if(isset($_SESSION['pages'])) echo $_SESSION['pages'];?>">
             <br><br>
             <div>Difficulty</div>
-            <input name="pages" type="number" min="1" max="5" value="<?php if(isset($_SESSION['diff'])) echo $_SESSION['diff'];?>">
+            <input name="diff" type="number" min="1" max="5" value="<?php if(isset($_SESSION['diff'])) echo $_SESSION['diff'];?>">
             <br><br>
             <div>Deadline</div>
             <input name="deadline" type="date" value="<?php if(isset($_SESSION['deadline'])) echo $_SESSION['deadline'];?>">
@@ -17,8 +17,8 @@
             <input class="w3-btn w3-round-large" value="Upload">
         </div>
         <div class="w3-half">
-            <div>Optional message:</div>
-            <textarea rows="12" cols="50" maxlength="400" style="resize: none" name="message"><?php if(isset($_SESSION['message'])) echo $_SESSION['message'];?></textarea>
+            <div>Optional description:</div>
+            <textarea rows="12" cols="50" maxlength="400" style="resize: none" name="description"><?php if(isset($_SESSION['desc'])) echo $_SESSION['desc'];?></textarea>
             <br>
             <input class="w3-btn w3-round-large red-border no-border" type="submit" value="Create">
         </div>

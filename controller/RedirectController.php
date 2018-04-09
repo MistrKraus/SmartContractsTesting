@@ -58,6 +58,7 @@ class RedirectController extends Controller {
     function process($params) {
         $parsedURL = $this->parseURL($params[0]);
 
+//        $this->addMessage($parsedURL[0]);
         if(empty($parsedURL[0])) {
             $this->redirect("intro");
         }
