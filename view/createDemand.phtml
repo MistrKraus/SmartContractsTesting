@@ -1,4 +1,4 @@
-<form method="POST">
+<form enctype="multipart/form-data" method="POST">
     <div class="w3-row-padding">
         <div class="w3-half">
             <div>Title</div>
@@ -14,7 +14,8 @@
             <input name="deadline" type="date" value="<?php if(isset($_SESSION['deadline'])) echo $_SESSION['deadline'];?>">
             <br><br>
             <div>File</div>
-            <input class="w3-btn w3-round-large" value="Upload">
+            <input class="w3-btn w3-round-large" type="file" name="fileUp" value="Upload">
+            <input type="hidden" name="MAX_SIZE" value="8388608" />
         </div>
         <div class="w3-half">
             <div>Optional description:</div>

@@ -14,7 +14,7 @@
             </div>
         </div>
         <?php
-//        $i = 0;
+        $i = 0;
         foreach ($_SESSION['sentBinds'] as $work) { ?>
             <button class="w3-col l8 accordion">
                 <div class="w3-col l3" ><?=$work['label']?></div>
@@ -84,8 +84,10 @@
             </button>
             <div class="w3-col l8 panel" style="align-content: center">
                 <form method="POST">
-                    <input type="submit" value="Download File" name="downloadFile<?=$work['id']?>"
+                    <input type="submit" value="Download File" name="DownloadFile"
                            class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                    <input type="hidden" value="008.png" name="fileDwn">
+                    <!-- odstraneno = -neznama chyba(?) a <?//$work['id']?> -neznama chyba(?) z name-->
                 </form>
                     <a class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent; text-align: center">Send Review</a>
             </div>
@@ -150,11 +152,11 @@
             </button>
             <div class="w3-col l8 panel" style="align-content: center">
                 <form method="post">
-                    <label><input type="submit" value="Upload File" name="downloadFile<?=$work['id']?>"
+                    <label><input type="submit" value="Upload File" name="UploadFile"
                            class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                        File name.
+                        File name. <!-- odstraneno = -neznama chyba(?) a <?//$work['id']?> -neznama chyba(?) -->
                     </label>
-                    <input type="submit" value="Cancel" name="cancelMyCorrection<?=$work['id']?>"
+                    <input type="submit" value="Cancel" name="cancelMyCorrection<?$work['id']?>"
                            class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">
                 </form>
             </div>

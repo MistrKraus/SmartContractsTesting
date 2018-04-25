@@ -61,7 +61,7 @@ abstract class Controller {
 
     // Přesměruje na dané URL
     public function redirect($url) {
-        header("Location: /Ethereum/?Controller=$url");
+        header("Location: ?Controller=$url");
         header("Connection: close");
         exit;
     }

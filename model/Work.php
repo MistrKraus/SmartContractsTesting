@@ -8,12 +8,6 @@
 
 class Work {
 
-    /**
-     * Vrátí veškeré nabídky ceny za poptávané korektury
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getSentBindsCorrections($userId) {
         return Db::getAll("SELECT corrections_id AS id, R.title AS label, R.deadline AS deadline, payment AS eth,
               u.username AS user FROM Binds AS b
@@ -21,12 +15,6 @@ class Work {
               WHERE R.client_id=:userId AND closed=0", array(':userId'=>$userId));
     }
 
-    /**
-     * Vrátí veškeré právě probíhajících poptávaných korekrce
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getOpenSentCorrections($userId) {
         return Db::getAll("SELECT corrections_id AS id, R.title AS label, R.deadline AS deadline, payment AS eth,
               u.username AS user FROM Corrections AS os
@@ -35,12 +23,6 @@ class Work {
               WHERE R.client_id=:userId AND closed=0", array(':userId'=>$userId));
     }
 
-    /**
-     * Vrátí veškeré uzavřené korektury
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getClosedSentCorrections($userId) {
         return Db::getAll("SELECT corrections_id AS id, R.title AS label, R.deadline AS deadline, payment AS eth,
               u.username AS user FROM Corrections AS cs
@@ -49,22 +31,10 @@ class Work {
               WHERE R.client_id=:userId AND closed=1", array(':userId'=>$userId));
     }
 
-    /**
-     * Vrátí veškeré uživatelem nabídky cen za korektury
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getMyBinds($userId) {
         return Db::getAll("SELECT  Binds AS b");
     }
 
-    /**
-     * Vrátí veškteré probíhající korektury, které uživatel provádí
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getOpenMyCorrections($userId) {
         return Db::getAll("SELECT corrections_id AS id, R.title AS label, R.deadline AS deadline, payment AS eth,
               u.username AS user FROM Corrections AS om
@@ -73,12 +43,6 @@ class Work {
               WHERE R.corrector_id=:userId AND closed=0", array(':userId'=>$userId));
     }
 
-    /**
-     * Vrátí veškeré uzavřené uživatelem opravované korektury
-     *
-     * @param $userId id uživatele v databázi
-     * @return mixed
-     */
     public static function getClosedMyCorrections($userId) {
         return Db::getAll("SELECT corrections_id AS id, R.title AS label, R.deadline AS deadline, payment AS eth,
               u.username AS user FROM Corrections AS om
@@ -87,42 +51,16 @@ class Work {
               WHERE R.corrector_id=:userId AND closed=1", array(':userId'=>$userId));
     }
 
-    /**
-     * Vytvoří poptávku na korekturu
-     *
-     * @param $userId id uživatele v dazabázi
-     * @param $label název korektury
-     * @param $pages počet stran
-     * @param $diff náročnost korektury
-     * @param $deadline nepozdnější termín odevzdání korektury
-     * @param $mess popis ~ zpráva k dokumentu
-     * @param $file cesta k dokumentu
-     */
     public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file) {
         Db::insert("Request", array('client'=>$userId, 'title'=>$label, 'pages'=>$pages,
             'file'=>$file, 'diff'=>$diff, 'created'=>date("d.m.y"), 'deadline'=>$deadline));
     }
 
-    /**
-     * Vytvoří nabídku ceny za korekturu
-     *
-     * @param $requestId id požadavku na korekturu
-     * @param $correctorId id korektora
-     * @param $eth cena v eth
-     */
     public static function createBind($requestId, $correctorId, $eth) {
         Db::insert("Binds", array('requestId'=>$requestId, 'user_id'=>$correctorId, 'eth_demand'=>$eth,
             'created'=>date("d.m.y")));
     }
 
-    /**
-     * Vytvoří závazný kontrakt
-     *
-     * @param $requestId id požadavku
-     * @param $correctorId id korektora
-     * @param $eth cena v eth
-     * @param $smartContAddress adresa vytvořeného Smart kontraktu
-     */
     public static function createCorrection($requestId, $correctorId, $eth, $smartContAddress) {
         //TODO smart contract
         Db::insert("Corrections", array('request_id'=>$requestId, 'corrector_id'=>$correctorId, 'payment'=>$eth,
@@ -132,16 +70,11 @@ class Work {
             array(':requestId'=>$requestId, ':correctorId'=>$correctorId));
     }
 
-    /**
-     * Zapíše zamítnutí nabídky eth za korektrutu
-     *
-     * @param $bindId id nabídky
-     */
     public static function rejectBind($bindId) {
         Db::query("UPDATE FROM Binds SET accepted=0 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
     }
 
-    public static function cancleOrder($orderId) {
+    public static function cancelOrder($orderId) {
 
     }
 }

@@ -143,7 +143,8 @@ class Db
      * @param array $parametry
      * @return mixed
      */
-    public static function update($tabulka, $hodnoty = array(), $podminka, $parametry = array()) {
+    public static function update($tabulka, $hodnoty = array(), $podminka, $parametry = array())
+    {
 //        echo var_dump($parametry). " --- ";
 //        echo "UPDATE `$tabulka` SET `" .
 //            implode('` = ?, `', array_keys($hodnoty)) .
@@ -161,7 +162,8 @@ class Db
      * Vrací ID posledně vloženého záznamu
      * @return mixed
      */
-    public static function getLastId() {
+    public static function getLastId()
+    {
         return self::$connection->lastInsertId();
     }
 }

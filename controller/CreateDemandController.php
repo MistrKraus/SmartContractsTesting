@@ -12,6 +12,7 @@ class CreateDemandController extends Controller {
 
 //        $this->checkLogin();
 
+
         if ($_POST) {
             // if form filled correctly
             if (!$this->checkPost()) {
@@ -25,7 +26,7 @@ class CreateDemandController extends Controller {
             $pages = $_POST['pages'];
             $diff = $_POST['diff'];
             $deadline = $_POST['deadline'];
-            //$file = ...;
+            $uploadDir = "./uploads/";
             if (isset($_POST['description']))
                 $desc = $_POST['description'];
             else
@@ -36,6 +37,9 @@ class CreateDemandController extends Controller {
                 return;
             }
 
+            //create user folder?
+            move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
+
             $this->addMessage("I'm new");
 
             $_SESSION['lastPost']['label'] = $label;
@@ -44,10 +48,11 @@ class CreateDemandController extends Controller {
             $_SESSION['lastPost']['deadline'] = $deadline;
             $_SESSION['lastPost']['desc'] = $desc;
 
-            $filePath = "File path on server";  //TODO
+            $filePath = $uploadDir . $_FILES['fileUp']['name'];  //TODO
 
             // save to the database
-            Work::createDemand($label, $pages, $diff, $desc, $filePath);
+            // user logged in?
+            //Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath);
         }
     }
 
@@ -67,7 +72,6 @@ class CreateDemandController extends Controller {
         }
 
         if (!isset($_POST['deadline']) || !$_POST['deadline']) {
-            //TODO
             $this->addMessage("Deadline");
             $isOk = false;
         }
@@ -78,10 +82,16 @@ class CreateDemandController extends Controller {
             $isOk = false;
         }
 
-        // file uploaded test
-//        if () {
-//
-//        }
+        if ($_FILES['fileUp']['size'] == 0) {
+            $this->addMessage("Zero byte file");
+            $isOk = false;
+        } elseif ($_FILES['fileUp']['size'] > $_POST['MAX_SIZE']) {
+            $this->addMessage("Too big file (max. 8MB)");
+            $isOk = false;
+        } elseif (!is_uploaded_file($_FILES['fileUp']['tmp_name'])){
+            $this->addMessage("File injected, not uploaded");
+            $isOk = false;
+        }
 
         return $isOk;
     }
