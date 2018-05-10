@@ -2,7 +2,7 @@
     <div class="col-md-4">Username</div>
         <div class="col-md-8">
             <input name="userName" type="text"
-                     value="<?php if(isset($_SESSION['userName'])) echo $_SESSION['userName'];?>">
+                     value="<?php if(isset($_SESSION['regUsername'])) echo $_SESSION['regUsername'];?>">
             <?php if (isset($error[0])) {?>
                 <span class="glyphicon glyphicon-pencil wrongInput"></span>
                 <span><?=$error[0]?></span>
@@ -30,7 +30,7 @@
             After successful registration you'll be automatically logged in and redirected to homepage.
         </div>
         <div class="col-md-3" align="right">
-            <input class="w3-btn w3-round-large red-border no-border" type="submit" value="Sign up">
+            <input class="w3-btn w3-round-large red-border no-border" name="regSubmit" type="submit" value="Sign up">
         </div>
     </div>
 </form>

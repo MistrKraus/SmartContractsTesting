@@ -14,8 +14,8 @@ class User {
     }
 
     // vrátí data o uživateli podle jména
-    public static function logIn($metamaskId) {
-        return Db::getFirstRow("SELECT * FROM users WHERE eth_wallet_address=:eth_wallet_address", array(':metamask'=>$metamaskId));
+    public static function logIn($metamask) {
+        return Db::getFirstRow("SELECT * FROM users WHERE eth_wallet_address=:eth_wallet_address", array(':eth_wallet_address'=>$metamask));
     }
 
     // vrátí heslo uživatele
@@ -25,7 +25,7 @@ class User {
 
     // vrátí data o uživateli podle id
     public static function getUser($user_id) {
-        return Db::getAll("SELECT * FROM users WHERE user_id=:user_id", array(':users_id'=>$user_id));
+        return Db::getAll("SELECT * FROM users WHERE users_id=:users_id", array(':users_id'=>$user_id));
     }
 
     public static function setAsCorrector($user_id, $corrector) {
