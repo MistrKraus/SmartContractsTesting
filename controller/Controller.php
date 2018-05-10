@@ -98,35 +98,18 @@ abstract class Controller {
     // Odhlásí uživatele
     public function logout() {
         unset($_SESSION['user_id']);
-//        unset($_SESSION['user_position']);
         unset($_SESSION['user_name']);
     }
 
     // zpracuje POST z kostry html
-//    public function processMain() {
-//        $fromUrl = $_SESSION['fromUrl'];
-//
-//        if (isset($_POST['login'])) {
-//            if (isset($_SESSION['user_id'])) {
-//                return;
-//            }
-//
-//            $this->redirectToLogin($fromUrl);
-//        }
-//
-//        if (isset($_POST['registration'])) {
-//            if (isset($_SESSION['user_id'])) {
-//                return;
-//            }
-//
-//            $this->redirectToRegistration($fromUrl);
-//        }
-//
-//        if (isset($_POST['logout'])) {
-//            $_SESSION['fromUrl'] = $fromUrl;
-//            $this->logoutAndRedirect();
-//        }
-//    }
+    public function processMain() {
+        $fromUrl = $_SESSION['fromUrl'];
+
+        if (isset($_POST['logout'])) {
+            $_SESSION['fromUrl'] = $fromUrl;
+            $this->logoutAndRedirect();
+        }
+    }
 
     // zkontroluje, zda přihlášený uživatel existuje, popřípadě jej odhlásí
     public function checkLogin() {

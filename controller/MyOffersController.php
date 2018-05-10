@@ -51,6 +51,8 @@ class MyOffersController extends Controller {
 
 
         if ($_POST) {
+            $this->processMain();
+            $this->loggedOnly();
 
 //            $this->addMessage(print_r($_SESSION['sentBinds']));
             if($_SESSION['sentBinds']!="") {

@@ -25,6 +25,8 @@ class LoginController extends Controller {
         $this->checkLogin();
 
         if ($_POST) {
+            $this->processMain();
+
             if ($_POST['metamask'] == "undefined")
                 $this->addMessage("Please log in to your MataMask account you registered with on this website.");
             else {

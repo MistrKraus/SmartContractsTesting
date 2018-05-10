@@ -20,7 +20,7 @@ class HowToController extends Controller
         $this->checkLogin();
 
         if ($_POST) {
-
+            $this->processMain();
         }
     }
 

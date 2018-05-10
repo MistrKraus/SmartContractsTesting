@@ -19,6 +19,8 @@ class SettingsController extends Controller {
         $this->checkLogin();
 
         if ($_POST) {
+            $this->processMain();
+            $this->loggedOnly();
 //            User::setEmail();
             User::setAsCorrector($_SESSION['user_id'], $_POST['corrector']);
         }

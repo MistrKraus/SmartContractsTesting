@@ -59,6 +59,9 @@ class FindWorkController extends Controller {
 //        }
 //
         if ($_POST) {
+            $this->processMain();
+            $this->loggedOnly();
+
             foreach ($_SESSION['works'] as $work) {
 //            $i = 0; //ziskat hidden request_id a prislusnou hodnotu eth -> do db
                 //for ($i; $i < sizeof($_SESSION['works']); $i++) {

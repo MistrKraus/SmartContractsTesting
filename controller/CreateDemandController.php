@@ -15,6 +15,9 @@ class CreateDemandController extends Controller {
 
 
         if ($_POST) {
+            $this->processMain();
+            $this->loggedOnly();
+
             // if form filled correctly
             if (!$this->checkPost()) {
                 $this->addMessage("Filled wrong");

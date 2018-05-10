@@ -29,6 +29,8 @@ class RegistrationController extends Controller {
 
         // zpracuje vstup
         if ($_POST) {
+            $this->processMain();
+
             // zkonroluje správnost vstupu
             if (!$this->testPost()) {
                 return;

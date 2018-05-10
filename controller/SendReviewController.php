@@ -19,6 +19,11 @@ class SendReviewController extends Controller {
         $this->loggedOnly();
         $this->checkLogin();
 
+        if ($_POST) {
+            $this->processMain();
+            $this->loggedOnly();
+        }
+
     }
 
     function clearController() {

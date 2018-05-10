@@ -30,6 +30,7 @@ spl_autoload_register("autoloadFunkce");
 
 //
 //Db::connect("localhost", "cernyj", "ASDfaskjhjksasadf-asd", "cernyj");     // VOCABULARY
+Db::connect("localhost", "root", "", "cernyj");     // VOCABULARY
 
 $redirect = new RedirectController();
 $redirect->process(array($_SERVER['REQUEST_URI']));

@@ -21,7 +21,7 @@ class IntroController extends Controller {
 
         //$this->addMessage(Db::getFirstRow("SELECT username, email, eth_wallet_address, role FROM Users"));
         if ($_POST) {
-
+            $this->processMain();
         }
     }
 

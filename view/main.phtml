@@ -25,7 +25,7 @@
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
-    <a href="?Controller=javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
+    <a href="?Controler=javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
     <div class="w3-container">
         <h3 class="w3-padding-24"><b>Red - i<br>Correction</b></h3>
     </div>
@@ -43,7 +43,12 @@
         <div class="w3-hide-large">
             <br>
             <?php if (!isset($_SESSION['user_id'])) {?>
-                <a href="?Controller=settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+                <div>
+                    <a href="?Controller=accountReviews" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+                    <form method="post">
+                        <input type="submit" name="logout" class="w3-bar-item w3-button w3-hover-white" value="Log out">
+                    </form>
+                </div>
             <?php } else { ?>
                 <a href="?Controller=login" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
                 <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
@@ -64,8 +69,11 @@
 <div class="w3-main" style="margin-left:340px;margin-right:40px;margin-top: 30px">
     <!-- Sign in/up large -->
     <div class="w3-hide-small" style="float: right;">
-        <?php if (isset($_SESSION['logedin'])) {?>
-            <a href="?Controller=settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
+        <?php if (isset($_SESSION['user_id'])) {?>
+            <a href="?Controller=accountReviews" class="w3-btn w3-round-large red-border no-border">My Account</a>
+            <form method="post">
+                <input type="submit" name="logout" class="w3-btn w3-round-large red-border no-border" value="Log out">
+            </form>
         <?php } else { ?>
 <!--            <a href="?Controller=login" onclick="post()" class="w3-btn w3-round-large red-border no-border">Sign in</a>-->
             <input type="submit" onclick="loginMM()" class="w3-btn w3-round-large red-border no-border" value="Sign in">
