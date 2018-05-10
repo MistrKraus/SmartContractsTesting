@@ -16,6 +16,8 @@ class SendReviewController extends Controller {
         // Nastavení šablony
         $this->view = 'sendReview';
 
+        $this->loggedOnly();
+        $this->checkLogin();
 
     }
 

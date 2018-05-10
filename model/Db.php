@@ -123,7 +123,6 @@ class Db
                 "`) VALUES (" . str_repeat('?,', sizeOf($parametry) - 1) . "?)",
                 array_values($parametry));
         } catch (Exception $e) {
-            //echo $e . "<br>----<br>";
             return -1;
         }
     }

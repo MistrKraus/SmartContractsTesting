@@ -15,6 +15,7 @@ class AccountReviewsController extends Controller {
         // Nastavení šablony
         $this->view = 'accountReviews';
 
+        $this->loggedOnly();
         $this->checkLogin();
 
         $reviews = array(array());

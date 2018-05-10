@@ -10,6 +10,11 @@
 <link rel="stylesheet" type="text/css" href="resources/w3.css">
 <link rel="stylesheet" type="text/css" href="resources/poppins.css">
 <link rel="stylesheet" href="resources/bootstrap.icon-large.min.css" >
+
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script src="resources/javaScript/designScript.js"></script>-->
+<!--<script src="model/meta_mask.js"></script>-->
+
 <style>
     body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
     body {font-size:16px;}
@@ -25,16 +30,22 @@
         <h3 class="w3-padding-24"><b>Red - i<br>Correction</b></h3>
     </div>
     <div class="w3-bar-block">
-        <a href="?Controller=intro" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
-        <a href="?Controller=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
-        <a href="?Controller=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
-        <a href="?Controller=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
+        <a href="?Controller=intro" onclick="w3_close()" id="lololol" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
+        <?php if (isset($_SESSION['user_id'])) { ?>
+            <a href="?Controller=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
+            <a href="?Controller=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
+            <a href="?Controller=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
+        <?php } else { ?>
+            <a href="?Controller=login" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+            <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
+        <?php } ?>
+        <a href="?Controller=howTo" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="bottom: 10px; position: absolute; width: 90%">Q&A</a>
         <div class="w3-hide-large">
             <br>
-            <?php if (!isset($_SESSION['loggedin'])) {?>
+            <?php if (!isset($_SESSION['user_id'])) {?>
                 <a href="?Controller=settings" class="w3-bar-item w3-button w3-hover-white">My Account</a>
             <?php } else { ?>
-                <a href="?Controller=login" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+                <a href="?Controller=login" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
                 <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
             <?php }?>
         </div>
@@ -56,8 +67,10 @@
         <?php if (isset($_SESSION['logedin'])) {?>
             <a href="?Controller=settings" class="w3-btn w3-round-large red-border no-border">My Account</a>
         <?php } else { ?>
-            <a href="?Controller=login" class="w3-btn w3-round-large red-border no-border">Sign in</a>
-            <a href="?Controller=registration" class="w3-btn w3-round-large red-border no-border">Sign up</a>
+<!--            <a href="?Controller=login" onclick="post()" class="w3-btn w3-round-large red-border no-border">Sign in</a>-->
+            <input type="submit" onclick="loginMM()" class="w3-btn w3-round-large red-border no-border" value="Sign in">
+            <a href="?Controller=registration" onclick="set_current_metamask_address()" class="w3-btn w3-round-large red-border no-border">Sign up</a>
+<!--            <input type="submit" onclick="post2()" class="w3-btn w3-round-large red-border no-border" value="Sign up">-->
         <?php }?>
     </div>
     <!-- !PAGE CONTENT! -->
@@ -76,15 +89,24 @@
 
 <!-- W3.CSS Container -->
 <footer class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px">
-    <p class="w3-right">
+    <div id="metamaskaddress" style="float:right"></div>
+    <p class="w3-right" >
+
         Powered by
         <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">
             w3.css
+            <?php
+//            echo '<script type="text/javascript">',
+//            'get_current_metamask_address();',
+//            '</script>';
+            ?>
         </a>
     </p>
 </footer>
-
-<script src="resources/javaScript/designScript.js"></script>
-
 </body>
 </html>
+<script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="resources/javaScript/designScript.js"></script>
+    <script src="model/meta_mask.js"></script>
+</script>

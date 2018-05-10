@@ -15,7 +15,13 @@ class SettingsController extends Controller {
         // Nastavení šablony
         $this->view = 'settings';
 
+        $this->loggedOnly();
         $this->checkLogin();
+
+        if ($_POST) {
+//            User::setEmail();
+            User::setAsCorrector($_SESSION['user_id'], $_POST['corrector']);
+        }
     }
 
     function clearController() {

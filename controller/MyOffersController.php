@@ -15,92 +15,153 @@ class MyOffersController extends Controller {
         // Nastavení šablony
         $this->view = 'myOffers';
 
+        $this->loggedOnly();
         $this->checkLogin();
 
+//        unset($_SESSION['sentBinds']);
+//        unset($_SESSION['sentOpen']);
+//        unset($_SESSION['sentClosed']);
+//        unset($_SESSION['correctingBinds']);
+//        unset($_SESSION['correctingOpen']);
+//        unset($_SESSION['correctingClosed']);
+//        unset($_SESSION['uploadID']);
+//
+        $_SESSION['sentBinds'] = "";
+        $_SESSION['sentOpen'] = "";
+        $_SESSION['sentClosed'] = "";
+        $_SESSION['correctingBinds'] = "";
+        $_SESSION['correctingOpen'] = "";
+        $_SESSION['correctingClosed'] = "";
+        $_SESSION['uploadID'] = "";
+
+
+        $userID = 1; //TODO logged in user
         //TODO
-//        $_SESSION['sentBinds'] = Work::getSentBindsCorrections();
-//        $_SESSION['sentOpen'] = Work::getOpenSentCorrections();
-//        $_SESSION['sentClosed'] = Work::getClosedSentCorrections();
-//        $_SESSION['correctingBinds'] = Work::getMyBinds();
-//        $_SESSION['correctingOpen'] = Work::getOpenMyCorrections();
-//        $_SESSION['correctingClosed'] = Work::getClosedMyCorrections();
+        $_SESSION['sentBinds'] = Work::getSentBindsCorrections($userID);
+        $_SESSION['sentOpen'] = Work::getOpenSentCorrections($userID);
+        $_SESSION['sentClosed'] = Work::getClosedSentCorrections($userID);
 
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['sentBinds'][$i]['label'] = "Name";
-            $_SESSION['sentBinds'][$i]['deadline'] = rand(0, 20);
-            $_SESSION['sentBinds'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['sentBinds'][$i]['user'] = "Name";
-        }
 
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['sentOpen'][$i]['label'] = "Name";
-            $_SESSION['sentOpen'][$i]['deadline'] = rand(0, 20);
-            $_SESSION['sentOpen'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['sentOpen'][$i]['user'] = "Name";
-        }
 
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['sentClosed'][$i]['label'] = "Name";
-            $_SESSION['sentClosed'][$i]['received'] = rand(0, 20);
-            $_SESSION['sentClosed'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['sentClosed'][$i]['user'] = "Name";
-        }
+//        $userID = 2; //TODO logged in user
+//        $_SESSION['correctingBinds'] = Work::getMyBinds($userID);
+//        $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
+//        $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
 
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['myBinds'][$i]['label'] = "Name";
-            $_SESSION['myBinds'][$i]['deadline'] = rand(0, 20);
-            $_SESSION['myBinds'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['myBinds'][$i]['user'] = "Name";
-        }
-
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['correctingOpen'][$i]['label'] = "Name";
-            $_SESSION['correctingOpen'][$i]['deadline'] = rand(0, 20);
-            $_SESSION['correctingOpen'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['correctingOpen'][$i]['user'] = "Name";
-        }
-
-        for ($i = 0; $i < 5; $i++) {
-            $_SESSION['correctingClosed'][$i]['label'] = "Name";
-            $_SESSION['correctingClosed'][$i]['received'] = rand(0, 20);
-            $_SESSION['correctingClosed'][$i]['eth'] = rand(0, 1000) / 1000;
-            $_SESSION['correctingClosed'][$i]['user'] = "Name";
-        }
 
         if ($_POST) {
-            if(isset($_POST['UploadFile'])) {
-                $this->redirect("fulfillDemand");
-            }
-            elseif (isset($_POST['DownloadFile'])) {
-                if (basename($_POST['fileDwn']) == $_POST['fileDwn']){
-                    $filename = $_POST['fileDwn'];
-                } else {
-                    $filename = NULL;
-                }
 
-                if (!$filename) {
-                    $this->addMessage("Requested file is unavailable");
-                } else {
-                    $path = 'uploads/'.$filename;
-                    if (file_exists($path) && is_readable($path)){
-                        $size = filesize($path);
-                        header('Content-Type: application/octet-stream');
-                        header('Content-Length: '.$size);
-                        header('Content-Disposition: attachment; filename='.$filename);
-                        header('Content-Transfer-Encoding: binary');
-                        $file = @ fopen($path, 'rb');
-                        if ($file){
-                            fpassthru($file);
-                            exit;
-                        } else {
-                            $this->addMessage("Can't open requested file");
+//            $this->addMessage(print_r($_SESSION['sentBinds']));
+            if($_SESSION['sentBinds']!="") {
+                foreach ($_SESSION['sentBinds'] as $bind) {
+                    if (isset($_POST['rejectBind' . $bind['id']])) {
+                        if (Work::rejectBind($bind['id']) == -1) {
+                            $this->addMessage("Chyba");
                         }
-                    } else {
-                        $this->addMessage("Requested file is unaccessible");
+                        $this->redirect('myOffers');
                     }
                 }
 
+                foreach ($_SESSION['sentBinds'] as $bind) {
+                    if (isset($_POST['acceptBind'.$bind['id']])) {
+                        if(Work::acceptBind($bind['id'])==-1){
+                            $this->addMessage("Chyba");
+                        }
+                        $this->redirect('myOffers');
+                    }
+                }
             }
+
+            if($_SESSION['correctingBinds']!="") {
+                foreach ($_SESSION['correctingBinds'] as $bind) {
+                    if (isset($_POST['cancelBind' . $bind['id']])) {
+                        if (Work::rejectBind($bind['id']) == -1) {
+                            $this->addMessage("Chyba");
+                        }
+                        $this->redirect('myOffers');
+                    }
+                }
+            }
+
+            if($_SESSION['sentOpen']!="") {
+                foreach ($_SESSION['sentOpen'] as $bind) {
+                    if (isset($_POST['cancelOrder' . $bind['id']])) { //pripadne TODO reg. vyrazy
+                        if (Work::rejectBind($bind['id']) == -1) {
+                            $this->addMessage("Chyba");
+                        }
+                        $this->redirect('myOffers');
+                    }
+                }
+            }
+            if($_SESSION['sentClosed']!="") {
+                foreach ($_SESSION['sentClosed'] as $bind) {
+                    if (isset($_POST['DownloadFile' . $bind['id']])) {
+//                        if (basename($_POST['fileDwn']) == $_POST['fileDwn']) {
+//                            $filename = $_POST['fileDwn'];
+//                        } else {
+//                            $filename = NULL;
+//                        }
+
+                        $req = Work::getFilename($bind['id']);
+                        if(sizeof($req)>0) {
+                            $path = $req[0]['corrected_file'];
+                            $pathXploded = explode("/", $path);
+                            $filename = $pathXploded[2];
+                            if (!$filename || $filename == 0) {
+                                $this->addMessage("Requested file is unavailable");
+                            } else {
+//                                $path = 'uploads/' . $filename;
+                                if (file_exists($path) && is_readable($path)) {
+                                    $size = filesize($path);
+                                    header('Content-Type: application/octet-stream');
+                                    header('Content-Length: ' . $size);
+                                    header('Content-Disposition: attachment; filename=' . $filename);
+                                    header('Content-Transfer-Encoding: binary');
+                                    $file = @ fopen($path, 'rb');
+                                    if ($file) {
+                                        fpassthru($file);
+                                        exit;
+                                    } else {
+                                        $this->addMessage("Can't open requested file");
+                                    }
+                                } else {
+                                    $this->addMessage("Requested file is unaccessible");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+            //přidat do DB fileCorrected
+            //pořešit CreateDemand+^změny
+            //upload k příslušnému ID
+            //pak dwnld
+            //review(?)
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+            if($_SESSION['correctingOpen']!="") {
+                foreach ($_SESSION['correctingOpen'] as $bind) {
+                    if (isset($_POST['cancelMyCorrection' . $bind['id']])) {
+                        if (Work::rejectBind($bind['id']) == -1) {
+                            $this->addMessage("Chyba");
+                        }
+                        $this->redirect('myOffers');
+                    }
+                    elseif(isset($_POST['UploadFile'. $bind['id']])) {
+                        $_SESSION['uploadID'] = $bind['id'];
+                            $this->redirect("fulfillDemand");
+                        }
+                }
+            }
+
             /*foreach ($_SESSION['sentBinds']['id'] as $id) {
                 if ($_POST['rejectBind'.$id]) {
                     Work::rejectBind($id);

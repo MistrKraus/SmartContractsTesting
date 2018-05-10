@@ -9,22 +9,26 @@
 class User {
 
     // zapíše nového uživatele do databáze
-    public static function registerUser($userName, $passWord) {
-        Db::insert("user", array('nickname'=>$userName, 'password'=>$passWord, 'position_id'=>2));
+    public static function registerUser($userName, $email, $metaMaskId) {
+        Db::insert("users", array('username'=>$userName, 'email'=>$email, 'eth_wallet_address'=>$metaMaskId));
     }
 
     // vrátí data o uživateli podle jména
-    public static function logIn($userName) {
-        return Db::getFirstRow("SELECT * FROM user WHERE nickname=:nickname", array(':nickname'=>$userName));
+    public static function logIn($metamaskId) {
+        return Db::getFirstRow("SELECT * FROM users WHERE eth_wallet_address=:eth_wallet_address", array(':metamask'=>$metamaskId));
     }
 
     // vrátí heslo uživatele
     public static function getUserPassword($userName) {
-        return Db::getFirstRow("SELECT password FROM user WHERE nickname=:nickname", array(':nickname'=>$userName));
+        return Db::getFirstRow("SELECT password FROM users WHERE nickname=:nickname", array(':nickname'=>$userName));
     }
 
     // vrátí data o uživateli podle id
     public static function getUser($user_id) {
-        return Db::getAll("SELECT * FROM user WHERE id_user=:id", array(':id'=>$user_id));
+        return Db::getAll("SELECT * FROM users WHERE user_id=:user_id", array(':users_id'=>$user_id));
+    }
+
+    public static function setAsCorrector($user_id, $corrector) {
+        return Db::update("Users", array('role'=>$corrector), "WHERE users_id=:user_id", array('users_id'=>$user_id));
     }
 }

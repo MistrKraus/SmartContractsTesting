@@ -87,7 +87,7 @@
                     <input type="submit" value="Download File" name="DownloadFile"
                            class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                     <input type="hidden" value="008.png" name="fileDwn">
-                    <!-- odstraneno = -neznama chyba(?) a <?//$work['id']?> -neznama chyba(?) z name-->
+                    <?//$work['id']?>
                 </form>
                     <a class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent; text-align: center">Send Review</a>
             </div>
@@ -123,7 +123,7 @@
             </button>
             <div class="w3-col l8 panel" style="align-content: center">
                 <form method="POST">
-                    <input type="submit" value="Cancle" name="cancleBind<?=$work['id']?>"
+                    <input type="submit" value="Cancel" name="cancelBind<?=$work['id']?>"
                            class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
                 </form>
             </div>

@@ -30,7 +30,7 @@ spl_autoload_register("autoloadFunkce");
 
 //
 //Db::connect("localhost", "cernyj", "ASDfaskjhjksasadf-asd", "cernyj");     // VOCABULARY
-//print_r(Db::getFirstRow("SELECT username, email, eth_wallet_address, role FROM Users"));
+
 $redirect = new RedirectController();
 $redirect->process(array($_SERVER['REQUEST_URI']));
 

@@ -10,7 +10,8 @@ class CreateDemandController extends Controller {
         // Nastavení šablony
         $this->view = 'createDemand';
 
-//        $this->checkLogin();
+        $this->loggedOnly();
+        $this->checkLogin();
 
 
         if ($_POST) {
@@ -27,17 +28,16 @@ class CreateDemandController extends Controller {
             $diff = $_POST['diff'];
             $deadline = $_POST['deadline'];
             $uploadDir = "./uploads/";
-            if (isset($_POST['description']))
+            if (isset($_POST['description']) && $_POST['description']!="")
                 $desc = $_POST['description'];
             else
-                $desc = "";
+                $desc = "No description";
 
             if (!$this->isDemandNew($label, $pages, $diff, $deadline)) {
                 $this->addMessage("I'm old");
                 return;
             }
 
-            //create user folder?
             move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
 
             $this->addMessage("I'm new");
@@ -52,7 +52,8 @@ class CreateDemandController extends Controller {
 
             // save to the database
             // user logged in?
-            //Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath);
+            $userId = 1; //TODO logged in user
+            Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath);
         }
     }
 
