@@ -33,6 +33,7 @@ class RegistrationController extends Controller {
 
             // zkonroluje správnost vstupu
             if (!$this->testPost()) {
+                $this->addMessage($this->data['error'][0]);
                 return;
             }
 
@@ -54,8 +55,7 @@ class RegistrationController extends Controller {
     }
 
     // zkontroluje vstup
-    function testPost()
-    {
+    function testPost() {
         $isOk = true;
 
         if (!(isset($_POST['userName']) && !empty($_POST['userName']))) {

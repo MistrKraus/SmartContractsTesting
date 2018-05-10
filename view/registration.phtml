@@ -19,7 +19,13 @@
     </div>
     <div class="col-md-4" style="padding-top: 0.5em">MetaMask Address</div>
         <div class="col-md-8">
-            <input id="metamaskReg" name="metamask" type="text" value="undefined" readonly="readonly">
+            <div>
+                <input id="metamaskReg" name="metamask" type="text" value="undefined" readonly="readonly">
+                <?php if (isset($error[3])) { ?>
+                    <span><?=$error[3]?></span>
+                    <a href="?Controller=login" onclick="loginMM()">Sing in</a>
+                <?php } ?>
+            </div>
             <div id="mmErr" style="visibility: hidden">
                 <label style="color: red">You need to be logged in to your MetaMask account to be registered.</label>
                 <a href="?Controller=howTo">Learn more!</a>
