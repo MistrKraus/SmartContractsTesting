@@ -7,6 +7,7 @@
  */
 
 class MyOffersController extends Controller {
+
     function process($params) {
         // Hlavička stránky
         $this->header['title'] = 'My Contracts';
@@ -18,6 +19,7 @@ class MyOffersController extends Controller {
         $this->loggedOnly();
         $this->checkLogin();
 
+//        $this->addMessage("");
 //        unset($_SESSION['sentBinds']);
 //        unset($_SESSION['sentOpen']);
 //        unset($_SESSION['sentClosed']);
@@ -26,17 +28,16 @@ class MyOffersController extends Controller {
 //        unset($_SESSION['correctingClosed']);
 //        unset($_SESSION['uploadID']);
 //
-        $_SESSION['sentBinds'] = "";
-        $_SESSION['sentOpen'] = "";
-        $_SESSION['sentClosed'] = "";
-        $_SESSION['correctingBinds'] = "";
-        $_SESSION['correctingOpen'] = "";
-        $_SESSION['correctingClosed'] = "";
+        $_SESSION['sentBinds'] = array();
+        $_SESSION['sentOpen'] = array();
+        $_SESSION['sentClosed'] = array();
+        $_SESSION['correctingBinds'] = array();
+        $_SESSION['correctingOpen'] = array();
+        $_SESSION['correctingClosed'] = array();
         $_SESSION['uploadID'] = "";
 
 
         $userID = 1; //TODO logged in user
-        //TODO
         $_SESSION['sentBinds'] = Work::getSentBindsCorrections($userID);
         $_SESSION['sentOpen'] = Work::getOpenSentCorrections($userID);
         $_SESSION['sentClosed'] = Work::getClosedSentCorrections($userID);
@@ -132,21 +133,6 @@ class MyOffersController extends Controller {
                     }
                 }
             }
-            //TODO
-            //TODO
-            //TODO
-            //TODO
-            //TODO
-            //přidat do DB fileCorrected
-            //pořešit CreateDemand+^změny
-            //upload k příslušnému ID
-            //pak dwnld
-            //review(?)
-            //TODO
-            //TODO
-            //TODO
-            //TODO
-            //TODO
             if($_SESSION['correctingOpen']!="") {
                 foreach ($_SESSION['correctingOpen'] as $bind) {
                     if (isset($_POST['cancelMyCorrection' . $bind['id']])) {
@@ -157,8 +143,8 @@ class MyOffersController extends Controller {
                     }
                     elseif(isset($_POST['UploadFile'. $bind['id']])) {
                         $_SESSION['uploadID'] = $bind['id'];
-                            $this->redirect("fulfillDemand");
-                        }
+                        $this->redirect("fulfillDemand");
+                    }
                 }
             }
 
