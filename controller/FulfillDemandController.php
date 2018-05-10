@@ -10,8 +10,10 @@ class FulfillDemandController extends Controller {
         // Nastavení šablony
         $this->view = 'fulfillDemand';
 
-//        $this->checkLogin();
+        $this->loggedOnly();
+        $this->checkLogin();
 
+        $this->addMessage("ID: " . $_SESSION['uploadID']);
 
         if ($_POST) {
             // if form filled correctly
@@ -20,14 +22,19 @@ class FulfillDemandController extends Controller {
                 return;
             }
 
-            $this->addMessage("Uploaded correctly");
 
             $uploadDir = "./corrected/";
 
             //create user folder?
             move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
 
+            $this->addMessage("Uploaded correctly");
             $filePath = $uploadDir . $_FILES['fileUp']['name'];  //TODO
+            $uploadID=$_SESSION['uploadID'];
+            $_SESSION['uploadID']="";
+            $this->addMessage("sent correctly");
+            Work::uploadCorrected($filePath, $uploadID);
+            $this->addMessage("db correctly");
 
             // save to the database
             // user logged in?
