@@ -54,10 +54,14 @@
                     <div class="w3-col l2" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
-                    <form method="POST">
-                        <input type="submit" value="Cancel Order" name="cancelOrder<?=$work['id']?>"
-                               class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
-                    </form>
+                    <?php if ($work['state']==2){?>
+                        <form method="POST">
+                            <input type="submit" value="Cancel Order" name="cancelOrder<?=$work['id']?>"
+                                   class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                        </form>
+                    <?php } else {?>
+                        <label>File already downloaded by corrector - can't be canceled.</label>
+                    <?php } ?>
                 </div>
                 <?php $i++; }?>
         </div>
@@ -84,12 +88,16 @@
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
                     <form method="POST">
-                        <input type="submit" value="Download File" name="DownloadFile"
+                        <input type="submit" value="Download File" name="DownloadCorrected<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                        <input type="hidden" value="008.png" name="fileDwn">
-                        <?$work['id']?>
+                        <?php if($work['review']<0){?>
+                            <input type="submit" value="Send Review" name="SendReview<?=$work['user']?>"
+                                   class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                        <?php } else {?>
+                            <progress style="float: right" value="<?=$work['review']?>" max="10"></progress>
+                            <label style="float: right">You rated <?=$work['review']?>/10</label>
+                        <?php } ?>
                     </form>
-                    <a class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent; text-align: center">Send Review</a>
                 </div>
                 <?php $i++; }?>
             <br>
@@ -143,7 +151,7 @@
             </div>
             <?php
             $i = 0;
-            foreach ($_SESSION['correctingOpen'] as $work) { ?>-->
+            foreach ($_SESSION['correctingOpen'] as $work) { ?>
                 <button class="w3-col l8 accordion">
                     <div class="w3-col l3" ><?=$work['label']?></div>
                     <div class="w3-col l3" ><?=$work['deadline']?></div>
@@ -152,11 +160,13 @@
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
                     <form method="post">
-                        <label><input type="submit" value="Upload File" name="UploadFile"
-                                      class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                            <!--                        File name. odstraneno = -neznama chyba(?) a --><?//$work['id']?><!-- -neznama chyba(?)-->
-                        </label>
-                        <input type="submit" value="Cancel" name="cancelMyCorrection<?$work['id']?>"
+                        <input type="submit" value="Download File" name="DownloadToCorrect<?=$work['id']?>"
+                               class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                        <?php if ($work['state']==3){?>
+                            <input type="submit" value="Upload File" name="UploadFile<?=$work['id']?>"
+                                   class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                        <?php } ?>
+                        <input type="submit" value="Cancel" name="cancelMyCorrection<?=$work['id']?>"
                                class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">
                     </form>
                 </div>
@@ -177,7 +187,7 @@
             </div>
             <?php
             $i = 0;
-            foreach ($_SESSION['correctingClosed'] as $work) { ?>-->
+            foreach ($_SESSION['correctingClosed'] as $work) { ?>
                 <button class="w3-col l8 accordion">
                     <div class="w3-col l3" ><?=$work['label']?></div>
                     <div class="w3-col l3" ><?=$work['received']?></div>
@@ -185,7 +195,11 @@
                     <div class="w3-col l2" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="text-align: center">
-                    INSERT REVIEW
+                    <progress value="<?=$work['review']?>" max="10"></progress>
+                    <label >Your rating: <?=$work['review'] ."/10"?></label>
+                    <?php if(strlen($work['review_text'])>0 && $work['review_text']!="No additional text"){?>
+                        <label><?="\"".$work['review_text'] . "\""?></label>
+                    <?php } ?>
                 </div>
                 <?php $i++; } }?>
         </div>

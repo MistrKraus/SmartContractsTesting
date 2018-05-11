@@ -51,11 +51,11 @@ class CreateDemandController extends Controller {
             $_SESSION['lastPost']['deadline'] = $deadline;
             $_SESSION['lastPost']['desc'] = $desc;
 
-            $filePath = $uploadDir . $_FILES['fileUp']['name'];  //TODO
+            $filePath = $uploadDir . $_FILES['fileUp']['name'];
 
             // save to the database
             // user logged in?
-            $userId = 1; //TODO logged in user
+            $userId = $_SESSION['user_id'];
             Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath);
         }
     }
@@ -64,13 +64,11 @@ class CreateDemandController extends Controller {
         $isOk = true;
 
         if (!isset($_POST['label']) || !$_POST['label']) {
-            //TODO
             $this->addMessage("Label");
             $isOk = false;
         }
 
         if (!isset($_POST['pages']) || !$_POST['pages']) {
-            //TODO
             $this->addMessage("Pages");
             $isOk = false;
         }
@@ -81,7 +79,6 @@ class CreateDemandController extends Controller {
         }
 
         if (!isset($_POST['diff']) || !$_POST['diff']) {
-            //TODO
             $this->addMessage("Diff");
             $isOk = false;
         }
@@ -105,9 +102,9 @@ class CreateDemandController extends Controller {
             return true;
         }
         if ($_SESSION['lastPost']['label'] == $label &&
-        $_SESSION['lastPost']['pages'] == $pages &&
-        $_SESSION['lastPost']['diff'] = $diff &&
-        $_SESSION['lastPost']['deadline'] = $deadline) {
+            $_SESSION['lastPost']['pages'] == $pages &&
+            $_SESSION['lastPost']['diff'] = $diff &&
+                $_SESSION['lastPost']['deadline'] = $deadline) {
             return false;
         }
 

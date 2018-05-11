@@ -18,6 +18,7 @@ class MyOffersController extends Controller {
 
         $this->loggedOnly();
         $this->checkLogin();
+//        $this->addMessage($_SESSION['user_id'] . " " . $_SESSION['username']);
 
 //        $this->addMessage("");
 //        unset($_SESSION['sentBinds']);
@@ -35,19 +36,22 @@ class MyOffersController extends Controller {
         $_SESSION['correctingOpen'] = array();
         $_SESSION['correctingClosed'] = array();
         $_SESSION['uploadID'] = "";
+        $_SESSION['userReview'] = "";
+        $_SESSION['fileReview'] = "";
+        $_SESSION['bindReview'] = "";
 
-
-        $userID = 1; //TODO logged in user
+        $userID = $_SESSION['user_id'];
+//        $userID = 1;
         $_SESSION['sentBinds'] = Work::getSentBindsCorrections($userID);
         $_SESSION['sentOpen'] = Work::getOpenSentCorrections($userID);
         $_SESSION['sentClosed'] = Work::getClosedSentCorrections($userID);
 
 
 
-//        $userID = 2; //TODO logged in user
-//        $_SESSION['correctingBinds'] = Work::getMyBinds($userID);
-//        $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
-//        $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
+//        $userID = 2;
+        $_SESSION['correctingBinds'] = Work::getMyBinds($userID);
+        $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
+        $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
 
 
         if ($_POST) {
@@ -98,7 +102,7 @@ class MyOffersController extends Controller {
             }
             if($_SESSION['sentClosed']!="") {
                 foreach ($_SESSION['sentClosed'] as $bind) {
-                    if (isset($_POST['DownloadFile' . $bind['id']])) {
+                    if (isset($_POST['DownloadCorrected' . $bind['id']])) {
 //                        if (basename($_POST['fileDwn']) == $_POST['fileDwn']) {
 //                            $filename = $_POST['fileDwn'];
 //                        } else {
@@ -132,6 +136,15 @@ class MyOffersController extends Controller {
                                 }
                             }
                         }
+                    } elseif(isset($_POST['SendReview' . $bind['user']])){
+                        $_SESSION['userReview'] = $bind['user'];
+                        $req = Work::getFilename($bind['id']);
+                        $path = $req[0]['corrected_file'];
+                        $pathXploded = explode("/", $path);
+                        $filename = $pathXploded[2];
+                        $_SESSION['fileReview'] = $filename;
+                        $_SESSION['bindReview'] = $bind['id'];
+                        $this->redirect("SendReview");
                     }
                 }
             }
@@ -146,6 +159,37 @@ class MyOffersController extends Controller {
                     elseif(isset($_POST['UploadFile'. $bind['id']])) {
                         $_SESSION['uploadID'] = $bind['id'];
                         $this->redirect("fulfillDemand");
+                    }
+                    elseif(isset($_POST['DownloadToCorrect' . $bind['id']])) {
+                        $req = Work::getFilenameToCorrect($bind['id']);
+                        if(sizeof($req)>0) {
+                            $path = $req[0]['file'];
+                            $pathXploded = explode("/", $path);
+                            $filename = $pathXploded[2];
+                            if (!$filename) {
+                                $this->addMessage("Requested file " . $filename . " is unavailable");
+                            } else {
+//                                $path = 'uploads/' . $filename;
+                                if (file_exists($path) && is_readable($path)) {
+                                    $size = filesize($path);
+                                    header('Content-Type: application/octet-stream');
+                                    header('Content-Length: ' . $size);
+                                    header('Content-Disposition: attachment; filename=' . $filename);
+                                    header('Content-Transfer-Encoding: binary');
+                                    $file = @ fopen($path, 'rb');
+                                    if ($file) {
+                                        Work::lockBind($bind['id']);
+                                        fpassthru($file);
+                                        $this->redirect("MyOffers");
+                                        exit;
+                                    } else {
+                                        $this->addMessage("Can't open requested file");
+                                    }
+                                } else {
+                                    $this->addMessage("Requested file " . $path . " is unaccessible");
+                                }
+                            }
+                        }
                     }
                 }
             }

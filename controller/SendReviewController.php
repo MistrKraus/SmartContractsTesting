@@ -12,7 +12,7 @@ class SendReviewController extends Controller {
         // Hlavička stránky
         $this->header['title'] = 'Sent Review';
         // Podnadpis strán
-        $this->header['subtitle'] = 'insert [name] - [filename]';      //TODO insert name and filename
+        $this->header['subtitle'] = $_SESSION['userReview'] . " - " . $_SESSION['fileReview'];
         // Nastavení šablony
         $this->view = 'sendReview';
 
@@ -22,8 +22,21 @@ class SendReviewController extends Controller {
         if ($_POST) {
             $this->processMain();
             $this->loggedOnly();
-        }
 
+
+            if(isset($_POST['submitReview']) && isset($_POST['stars'])){
+//                $this->addMessage($_POST['stars'] . " ... " . $_POST['review'] . " ... " . $_SESSION['bindReview']);
+                if(isset($_POST['review'])){
+                    $desc = $_POST['review'];
+                } else {
+                    $desc = "No additional text";
+                }
+                Work::sendReview($_SESSION['bindReview'],$_POST['stars'], $desc);
+                $_SESSION['userReview'] = "";
+                $_SESSION['fileReview'] = "";
+                $_SESSION['bindReview'] = "";
+            }
+        }
     }
 
     function clearController() {
