@@ -56,8 +56,8 @@ class Work {
               WHERE b.users_id=:userId AND b.state=4", array(':userId'=>$userId));
     }
 
-    public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file) {
-        Db::insert("request", array('client_id' => $userId, 'file' => $file, 'corrected_file' => "", 'created' => date("d.m.y"), 'deadline' => $deadline,
+    public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file, $hash) {
+        Db::insert("request", array('client_id' => $userId, 'file' => $file, 'hash' => $hash, 'corrected_file' => "", 'created' => date("d.m.y"), 'deadline' => $deadline,
             'title' => $label, 'diff' => $diff, 'pages' => $pages, 'description' => $mess));
     }
 
@@ -89,8 +89,8 @@ class Work {
 
 
     public static function listWorks($userID) {
-        return Db::getAll("SELECT request.request_id, request.title, request.pages, request.diff, request.deadline, request.description
-        FROM request LEFT JOIN corrections ON request.request_id = corrections.request_id WHERE corrections.closed NOT IN (SELECT closed FROM corrections) AND :userID NOT IN(SELECT users_id FROM binds WHERE state<>1 AND request_id=request.request_id)", array(':userID'=>$userID));
+        return Db::getAll("SELECT request.request_id, request.title, request.pages, request.diff, request.deadline, request.description, request.file
+        FROM request LEFT JOIN corrections ON request.request_id = corrections.request_id WHERE request.request_id NOT IN (SELECT request_id FROM binds WHERE state >1) AND request.client_id!=:usersID AND corrections.closed NOT IN (SELECT closed FROM corrections) AND :userID NOT IN(SELECT users_id FROM binds WHERE state<>1 AND request_id=request.request_id)", array('usersID'=>$userID, ':userID'=>$userID));
     }
 
     public static function cancelOrder($orderId) {

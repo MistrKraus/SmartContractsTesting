@@ -41,7 +41,33 @@ class CreateDemandController extends Controller {
                 return;
             }
 
-            move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
+            $file = $_FILES['fileUp']['name'];
+            $tmpfile = $file;
+//
+            if (file_exists($uploadDir.$file))
+            {
+                $i= 1;
+
+                while (file_exists($uploadDir.$tmpfile))
+                {
+                    // get file extension
+                    $extension = pathinfo($uploadDir.$tmpfile, PATHINFO_EXTENSION);
+
+                    // get file's name
+                    $filename = pathinfo($uploadDir.$file, PATHINFO_FILENAME);
+
+                    // add and combine the filename, iterator, extension
+                    $new_filename = $filename . '-' . $i . '.' . $extension;
+
+                    // add file name to the end of the path to place it in the new directory; the while loop will check it again
+                    $tmpfile = $new_filename;
+                    $i++;
+
+                }
+            }
+            $file = $tmpfile;
+//            $this->addMessage($file);
+            move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $file) or die("Cannot copy uploaded file");
 
             $this->addMessage("I'm new");
 
@@ -51,12 +77,13 @@ class CreateDemandController extends Controller {
             $_SESSION['lastPost']['deadline'] = $deadline;
             $_SESSION['lastPost']['desc'] = $desc;
 
-            $filePath = $uploadDir . $_FILES['fileUp']['name'];
+            $filePath = $uploadDir . $file;
 
+            $hash = md5_file($filePath);
             // save to the database
             // user logged in?
             $userId = $_SESSION['user_id'];
-            Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath);
+            Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath, $hash);
         }
     }
 
