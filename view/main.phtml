@@ -70,8 +70,8 @@
     <!-- Sign in/up large -->
     <div class="w3-hide-small" style="float: right;">
         <?php if (isset($_SESSION['user_id'])) {?>
-            <a href="?Controller=accountReviews" class="w3-btn w3-round-large red-border no-border">My Account</a>
             <form method="post">
+            <a href="?Controller=accountReviews" class="w3-btn w3-round-large red-border no-border">My Account</a>
                 <input type="submit" name="logout" class="w3-btn w3-round-large red-border no-border" value="Log out">
             </form>
         <?php } else { ?>
