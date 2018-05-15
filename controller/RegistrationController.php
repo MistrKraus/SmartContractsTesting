@@ -75,27 +75,24 @@ class RegistrationController extends Controller {
         }
 
         if (!(isset($_POST['metamask']) && !empty($_POST['metamask']))) {
-//            $this->addMessage("'Heslo znovu' není vyplněné");
-//            $this->data['error'][2] = "MetaMask Required!";
-            $isOk = false;
+            $this->data['error'][3] = "MetaMask required";
+            return false;
         }
 
-        if ($isOk) {
-        	$mm = $_POST['metamask'];
-        	settype($mm, "string");
+        $mm = $_POST['metamask'];
+        settype($mm, "string");
 
-            if ($mm!='undefined' && strlen($mm)==42) {
-                $user = User::logIn($mm);
-                if (strlen($user['users_id']) > 0) {
-                    $this->data['error'][3] = "Ethereum address already registered!";
-                    return false;
-                }
-            } else {
+        if ($mm!='undefined' && strlen($mm)==42) {
+            $user = User::logIn($mm);
+            if (strlen($user['users_id']) > 0) {
+                $this->data['error'][3] = "Ethereum address already registered!";
                 return false;
             }
+        } else {
+            return false;
         }
 
-        return true;
+        return $isOk;
     }
 
     // vymaže data ze Session
