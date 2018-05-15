@@ -16,9 +16,6 @@ class FulfillDemandController extends Controller {
         $this->addMessage("ID: " . $_SESSION['uploadID']);
 
         if ($_POST) {
-            $this->processMain();
-            $this->loggedOnly();
-
             // if form filled correctly
             if (!$this->checkPost()) {
                 $this->addMessage("Upload failed");
@@ -32,7 +29,7 @@ class FulfillDemandController extends Controller {
             move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
 
             $this->addMessage("Uploaded correctly");
-            $filePath = $uploadDir . $_FILES['fileUp']['name'];  //TODO
+            $filePath = $uploadDir . $_FILES['fileUp']['name'];
             $uploadID=$_SESSION['uploadID'];
             $_SESSION['uploadID']="";
             $this->addMessage("sent correctly");

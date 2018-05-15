@@ -10,68 +10,68 @@ class Work {
 
     public static function getSentBindsCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
+              u.username AS user FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
               WHERE R.client_id=:userId AND b.state=0", array(':userId'=>$userId));
     }
 
     public static function getOpenSentCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
-              WHERE R.client_id=:userId AND b.state=2", array(':userId'=>$userId));
+              u.username AS user, b.state FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
+              WHERE R.client_id=:userId AND (b.state=2 OR b.state=3)", array(':userId'=>$userId));
     }
 
     public static function getClosedSentCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, b.corrected AS received, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
+              u.username AS user, b.review FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
               WHERE R.client_id=:userId AND b.state=4", array(':userId'=>$userId));
     }
 
     public static function getMyBinds($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
+              u.username AS user FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
               WHERE b.users_id=:userId AND b.state=0", array(':userId'=>$userId));
     }
 
     public static function getOpenMyCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
-              WHERE b.users_id=:userId AND b.state=2", array(':userId'=>$userId));
+              u.username AS user, b.state FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
+              WHERE b.users_id=:userId AND (b.state=2 OR b.state=3)", array(':userId'=>$userId));
     }
 
     public static function getClosedMyCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, b.corrected AS received, b.eth_demand AS eth,
-              u.username AS user FROM Binds AS b
-              JOIN Request AS R ON R.request_id=b.request_id
-              JOIN Users AS u ON u.users_id=b.users_id
+              u.username AS user, b.review, b.review_text FROM binds AS b
+              JOIN request AS R ON R.request_id=b.request_id
+              JOIN users AS u ON u.users_id=b.users_id
               WHERE b.users_id=:userId AND b.state=4", array(':userId'=>$userId));
     }
 
-    public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file) {
-        Db::insert("request", array('client_id' => $userId, 'file' => $file, 'corrected_file' => "", 'created' => date("d.m.y"), 'deadline' => $deadline,
-            'title' => $label, 'diff' => $diff, 'pages' => $pages, 'description' => $mess)); //TODO request -> Request
+    public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file, $hash) {
+        Db::insert("request", array('client_id' => $userId, 'file' => $file, 'hash' => $hash, 'corrected_file' => "", 'created' => date("d.m.y"), 'deadline' => $deadline,
+            'title' => $label, 'diff' => $diff, 'pages' => $pages, 'description' => $mess));
     }
 
     public static function createBind($requestId, $correctorId, $eth) {
         Db::insert("binds", array('request_id'=>$requestId, 'users_id'=>$correctorId, 'eth_demand'=>$eth,
-            'created'=>date("y-m-d"))); //TODO binds->Binds
+            'created'=>date("y-m-d")));
     }
 
     public static function createCorrection($requestId, $correctorId, $eth, $smartContAddress) {
         //TODO smart contract
         Db::insert("Corrections", array('request_id'=>$requestId, 'corrector_id'=>$correctorId, 'payment'=>$eth,
             'assigned'=>date("d.m.y"), 'smartc_address'=>$smartContAddress));
-        Db::query("UPDATE Binds SET accepted=0 WHERE request_id=:requestId", array(':requestId'=>$requestId));
-        Db::query("UPDATE Binds SET accepted=1 WHERE request_id=:requestId AND users_id=:correctorId",
+        Db::query("UPDATE binds SET accepted=0 WHERE request_id=:requestId", array(':requestId'=>$requestId));
+        Db::query("UPDATE binds SET accepted=1 WHERE request_id=:requestId AND users_id=:correctorId",
             array(':requestId'=>$requestId, ':correctorId'=>$correctorId));
     }
 
@@ -83,10 +83,14 @@ class Work {
         return Db::query("UPDATE binds SET state=2 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
     }
 
+    public static function lockBind($bindId){
+        return Db::query("UPDATE binds SET state=3 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
+    }
+
 
     public static function listWorks($userID) {
-        return Db::getAll("SELECT request.request_id, request.title, request.pages, request.diff, request.deadline, request.description
-        FROM request LEFT JOIN corrections ON request.request_id = corrections.request_id WHERE corrections.closed NOT IN (SELECT closed FROM corrections) AND :userID NOT IN(SELECT users_id FROM binds WHERE state<>1 AND request_id=request.request_id)", array(':userID'=>$userID));
+        return Db::getAll("SELECT request.request_id, request.title, request.pages, request.diff, request.deadline, request.description, request.file
+        FROM request WHERE request.request_id NOT IN (SELECT request_id FROM binds WHERE state >1) AND request.client_id!=:usersID AND :userID NOT IN(SELECT users_id FROM binds WHERE state<>1 AND request_id=request.request_id)", array('usersID'=>$userID, ':userID'=>$userID));
     }
 
     public static function cancelOrder($orderId) {
@@ -104,6 +108,15 @@ class Work {
         }
     }
 
+    public static function getFilenameToCorrect($id)
+    {
+        $request = db::getAll("SELECT request_id FROM binds WHERE binds_id=:bind_id", array(':bind_id'=>$id));
+        if(sizeof($request)>0) {
+            $requestID = $request[0]['request_id'];
+            return db::getAll("SELECT file FROM request WHERE request_id=:request_id", array(':request_id' => $requestID));
+        }
+    }
+
     public static function getFilename($id)
     {
         $request = db::getAll("SELECT request_id FROM binds WHERE binds_id=:bind_id", array(':bind_id'=>$id));
@@ -112,4 +125,15 @@ class Work {
             return db::getAll("SELECT corrected_file FROM request WHERE request_id=:request_id", array(':request_id' => $requestID));
         }
     }
+
+    public static function sendReview($id, $stars, $desc){
+        Db::query("UPDATE binds SET review_text=:descr, review=:stars WHERE binds_id=:bind_id", array(':bind_id'=>$id,':stars'=>$stars, ':descr'=>$desc));
+    }
+
+    public static function checkUserID($userID)
+    {
+        $array = Db::getAll("SELECT binds_id FROM binds WHERE state!=1 AND users_id=:userID",array('userID'=>$userID));
+        return sizeof($array)>0;
+    }
+
 }
