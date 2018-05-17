@@ -41,7 +41,7 @@ class MyOffersController extends Controller {
         $_SESSION['bindReview'] = "";
 
         if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=null){
-            $userID = $_SESSION['user_id']-3;
+            $userID = $_SESSION['user_id'];
     //        $userID = 1;
 //            $this->addMessage($userID);
 //            if(Work::checkUserID($userID)) {
