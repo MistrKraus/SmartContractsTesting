@@ -1,0 +1,21 @@
+<div class="w3-col l12">
+<div class="w3-row l8">
+    <div class="w3-col l2">Client</div>
+    <div class="w3-col l2">Request title</div>
+    <div class="w3-col l2">Review</div>
+    <div class="w3-col l2">Review - text</div>
+</div>
+<?php
+
+if(sizeof($reviews)>0){
+    foreach ($reviews as $review) {?>
+        <div class="w3-row l8">
+        <div class="w3-col l2"><label style="float: left"><?=$review['username']?></label></div>
+        <div class="w3-col l2"><label style="float: left"><?=$review['title']?></label></div>
+        <div class="w3-col l2"><label style="float: left">Rated [<?=$review['review']?>/10]</label></div>
+        <?php if(strlen($review['review_text'])>0 && $review['review_text']!="No additional text"){?>
+            <div class="w3-col l2"><label><?="\"".$review['review_text'] . "\""?></label></div>
+        </div>
+    <?php } ?>
+<?php }} ?>
+</div>

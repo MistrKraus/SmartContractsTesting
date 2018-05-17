@@ -136,4 +136,9 @@ class Work {
         return sizeof($array)>0;
     }
 
+    public static function listReviews($user_id)
+    {
+        return Db::getAll("SELECT u.username, r. title, b.corrected, b.review, b.review_text FROM binds AS b LEFT JOIN request AS r ON b.request_id=r.request_id LEFT JOIN users AS u ON r.client_id=u.users_id WHERE b.users_id=:user_id AND review>=0", array('user_id'=>$user_id));
+    }
+
 }

@@ -139,7 +139,7 @@ class MyOffersController extends Controller {
                                 }
                             }
                         }
-                    } elseif(isset($_POST['SendReview' . $bind['user']])){
+                    } elseif(isset($_POST['SendReview' . $bind['id']])){
                         $_SESSION['userReview'] = $bind['user'];
                         $req = Work::getFilename($bind['id']);
                         $path = $req[0]['corrected_file'];

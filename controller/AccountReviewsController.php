@@ -13,17 +13,13 @@ class AccountReviewsController extends Controller {
         // Hlavička stránky
         $this->header['title'] = 'Account Reviews';
         // Podnadpis strán
-        $this->header['subtitle'] = $_SESSION['username'];     // TODO: Add correctors name
+        $this->header['subtitle'] = $_SESSION['username'];
         // Nastavení šablony
         $this->view = 'accountReviews';
 
         $this->checkLogin();
 
-        $reviews = array(array());
-
-        for ($i = 0; $i < 5; $i++) {
-            $reviews[$i]['reviewer'] = "";
-        }
+        $this->data['reviews'] = Work::listReviews($_SESSION['user_id']);
 
         if ($_POST) {
             $this->processMain();

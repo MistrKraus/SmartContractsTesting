@@ -89,7 +89,7 @@
                 <div class="w3-col l8 panel" style="align-content: center">
                     <form method="POST">
                         <?php if($work['review']<0){?>
-                            <input type="submit" value="Send Review" name="SendReview<?=$work['user']?>"
+                            <input type="submit" value="Send Review" name="SendReview<?=$work['id']?>"
                                    class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                         <?php } else {?>
                             <label style="float: left">You rated [<?=$work['review']?>/10]</label>
