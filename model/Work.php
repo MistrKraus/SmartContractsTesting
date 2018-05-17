@@ -26,7 +26,7 @@ class Work {
 
     public static function getClosedSentCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, b.corrected AS received, b.eth_demand AS eth,
-              u.username AS user, b.review FROM binds AS b
+              u.username AS user, b.review, b.review_text FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
               JOIN users AS u ON u.users_id=b.users_id
               WHERE R.client_id=:userId AND b.state=4", array(':userId'=>$userId));
@@ -101,8 +101,8 @@ class Work {
         $request = db::getAll("SELECT request_id FROM binds WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID));
         if(sizeof($request)>0) {
             $requestID = $request[0]['request_id'];
-            echo "---------------------------------------------------" . $requestID;
-            echo "UPDATE binds SET state=4, corrected=". date("y-m-d") ." WHERE binds_id=" . $uploadID;
+//            echo "---------------------------------------------------" . $requestID;
+//            echo "UPDATE binds SET state=4, corrected=". date("y-m-d") ." WHERE binds_id=" . $uploadID;
             Db::query("UPDATE request SET corrected_file=:file WHERE request_id=:request_id", array(':file' => $filePath, ':request_id' => $requestID));
             Db::query("UPDATE binds SET state=4, corrected=:corrected_date WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID, ':corrected_date' => date("y-m-d")));
         }

@@ -13,7 +13,7 @@ class FulfillDemandController extends Controller {
         $this->loggedOnly();
         $this->checkLogin();
 
-        $this->addMessage("ID: " . $_SESSION['uploadID']);
+//        $this->addMessage("ID: " . $_SESSION['uploadID']);
 
         if ($_POST) {
             // if form filled correctly
@@ -28,13 +28,13 @@ class FulfillDemandController extends Controller {
             //create user folder?
             move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $_FILES['fileUp']['name']) or die("Cannot copy uploaded file");
 
-            $this->addMessage("Uploaded correctly");
+//            $this->addMessage("Uploaded correctly");
             $filePath = $uploadDir . $_FILES['fileUp']['name'];
             $uploadID=$_SESSION['uploadID'];
             $_SESSION['uploadID']="";
-            $this->addMessage("sent correctly");
+//            $this->addMessage("sent correctly");
             Work::uploadCorrected($filePath, $uploadID);
-            $this->addMessage("db correctly");
+//            $this->addMessage("db correctly");
 
             // save to the database
             // user logged in?

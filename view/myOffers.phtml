@@ -88,13 +88,16 @@
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
                     <form method="POST">
-                        <input type="submit" value="Download File" name="DownloadCorrected<?=$work['id']?>"
-                               class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                         <?php if($work['review']<0){?>
                             <input type="submit" value="Send Review" name="SendReview<?=$work['user']?>"
-                                   class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                                   class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                         <?php } else {?>
-                            <label style="float: right">You rated <?=$work['review']?>/10</label>
+                            <label style="float: left">You rated [<?=$work['review']?>/10]</label>
+                        <?php } ?>
+                        <input type="submit" value="Download File" name="DownloadCorrected<?=$work['id']?>"
+                               class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                        <?php if(strlen($work['review_text'])>0 && $work['review_text']!="No additional text"){?> <br>
+                            <label><?="\"".$work['review_text'] . "\""?></label>
                         <?php } ?>
                     </form>
                 </div>
@@ -193,13 +196,17 @@
                     <div class="w3-col l3" ><?=$work['eth']?></div>
                     <div class="w3-col l2" ><?=$work['user']?></div>
                 </button>
-                <div class="w3-col l8 panel" style="text-align: center">
-                    <label >Your rating: <?=$work['review'] ."/10"?></label>
-                    <?php if(strlen($work['review_text'])>0 && $work['review_text']!="No additional text"){?>
+                <?php if($work['review']>0){?>
+                <div class="w3-col l8 panel" style="text-align: left">
+                    <label >Your rating: [<?=$work['review'] ."/10"?>]</label>
+                    <?php if(strlen($work['review_text'])>0 && $work['review_text']!="No additional text"){?> <br>
                         <label><?="\"".$work['review_text'] . "\""?></label>
                     <?php } ?>
                 </div>
-                <?php $i++; } }?>
+                <?php } else { ?>
+                    <div class="w3-col l8 panel" style="text-align: left">
+                        <label >Your rating: Waiting for client's review</label>
+                <?php } $i++; } }?>
         </div>
     </div>
 <?php } ?>
