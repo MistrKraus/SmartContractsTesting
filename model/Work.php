@@ -141,4 +141,13 @@ class Work {
         return Db::getAll("SELECT u.username, r. title, b.corrected, b.review, b.review_text FROM binds AS b LEFT JOIN request AS r ON b.request_id=r.request_id LEFT JOIN users AS u ON r.client_id=u.users_id WHERE b.users_id=:user_id AND review>=0", array('user_id'=>$user_id));
     }
 
+    public static function getSentRequests($userID)
+    {
+        return Db::getAll("SELECT request.request_id, request.title, request.pages, request.diff, request.deadline, request.description, request.created FROM request WHERE request.request_id NOT IN (SELECT request_id FROM binds WHERE state >1) AND request.client_id=:usersID", array('usersID'=>$userID));
+    }
+
+    public static function deleteRequest($id) {
+
+    }
+
 }

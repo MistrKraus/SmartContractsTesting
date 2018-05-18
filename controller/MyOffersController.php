@@ -29,6 +29,7 @@ class MyOffersController extends Controller {
 //        unset($_SESSION['correctingClosed']);
 //        unset($_SESSION['uploadID']);
 //
+        $_SESSION['sentRequests'] = array();
         $_SESSION['sentBinds'] = array();
         $_SESSION['sentOpen'] = array();
         $_SESSION['sentClosed'] = array();
@@ -45,6 +46,7 @@ class MyOffersController extends Controller {
     //        $userID = 1;
 //            $this->addMessage($userID);
 //            if(Work::checkUserID($userID)) {
+//                $_SESSION['sentRequests'] = Work::getSentRequests($userID);
                 $_SESSION['sentBinds'] = Work::getSentBindsCorrections($userID);
                 $_SESSION['sentOpen'] = Work::getOpenSentCorrections($userID);
                 $_SESSION['sentClosed'] = Work::getClosedSentCorrections($userID);
@@ -58,10 +60,22 @@ class MyOffersController extends Controller {
         }
 
         if ($_POST) {
+
             $this->processMain();
             $this->loggedOnly();
 
 //            $this->addMessage(print_r($_SESSION['sentBinds']));
+//            if($_SESSION['sentRequests']!="" && $_SESSION['sentRequests']!=1) {
+//                foreach ($_SESSION['sentRequests'] as $bind) {
+//                    if (isset($_POST['cancelOrder' . $bind['id']])) {
+//                        if (Work::deleteRequest($bind['id']) == -1) {
+//                            $this->addMessage("Chyba");
+//                        }
+//                        $this->redirect('myOffers');
+//                    }
+//                }
+//            }
+
             if($_SESSION['sentBinds']!="" && $_SESSION['sentBinds']!=1) {
                 foreach ($_SESSION['sentBinds'] as $bind) {
                     if (isset($_POST['rejectBind' . $bind['id']])) {
@@ -74,9 +88,12 @@ class MyOffersController extends Controller {
 
                 foreach ($_SESSION['sentBinds'] as $bind) {
                     if (isset($_POST['acceptBind'.$bind['id']])) {
-                        if(Work::acceptBind($bind['id'])==-1){
-                            $this->addMessage("Chyba");
-                        }
+//                        if(Work::acceptBind($bind['id'])==-1){
+//                            $this->addMessage("Chyba");
+//                        }
+
+
+
                         $this->redirect('myOffers');
                     }
                 }
