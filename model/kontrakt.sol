@@ -10,7 +10,7 @@ contract escrow {
 
     address private customer;
     address private corrector;
-    uint private expiration_time;
+    string private expiration_date;
     uint private creation_time;
     string private document_hash;
 
@@ -18,10 +18,10 @@ contract escrow {
     //@param _korektor je adresa korektora
     //@param _expiration_time_in_hours udava po kolika hodinach muze zakaznik kontrakt zrusit
     // kontrakt pod globalni promenou msg.value ulozi penize za korekci - msg.value se urcuje mimo tento kontrakt - pri jeho vytvareni
-    function escrow(address _korektor, uint _expiration_time_in_hours, string _document_hash) public payable {
+    function escrow(address _korektor, string _expiration_date, string _document_hash) public payable {
         customer = msg.sender;
         corrector = _korektor;
-        expiration_time = _expiration_time_in_hours * 1 hours;
+        expiration_time = _expiration_date;
         creation_time = now;
         document_hash = _document_hash;
     }
@@ -40,21 +40,13 @@ contract escrow {
         selfdestruct(customer);
     }    
     else return "You are not the corrector.";
-
-
   }
   // funkce customer_cancel() posle platbu zpet zakaznikovi a znici kontrakt, pokud funkci zavola korektor
   function customer_cancel() public returns(string){
     if(msg.sender == customer) {
-        if(creation_time + expiration_time < now){
-            selfdestruct(customer);
-        }
-        else return "Contract has not yet expired.";
+        selfdestruct(customer);
     }
-    else return "You are not the customer.";
-
-
-   
+    else return "You are not the customer.";   
   }
   
     
