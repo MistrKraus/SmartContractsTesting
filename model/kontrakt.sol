@@ -11,7 +11,6 @@ contract escrow {
     address private customer;
     address private corrector;
     string private expiration_date;
-    uint private creation_time;
     string private document_hash;
 
     //konstruktor vytvori kontrakt, ulozi zakaznikovo adresu - zakaznik musi byt ten, kdo vytvori kontrakt
@@ -21,8 +20,7 @@ contract escrow {
     function escrow(address _korektor, string _expiration_date, string _document_hash) public payable {
         customer = msg.sender;
         corrector = _korektor;
-        expiration_time = _expiration_date;
-        creation_time = now;
+        expiration_date = _expiration_date;
         document_hash = _document_hash;
     }
    
