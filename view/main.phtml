@@ -25,33 +25,33 @@
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
-    <a href="?Controler=javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
+    <a href="?Controler=javascript:void(0)" id="closeMenuBT" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
     <div class="w3-container">
         <h3 class="w3-padding-24"><b>Red - i<br>Correction</b></h3>
     </div>
     <div class="w3-bar-block">
-        <a href="?Controller=intro" onclick="w3_close()" id="lololol" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
+        <a href="?Controller=intro" onclick="w3_close()" id="homeBT" class="w3-bar-item w3-button w3-hover-white logo">Home</a>
         <?php if (isset($_SESSION['user_id'])) { ?>
-            <a href="?Controller=createDemand" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
-            <a href="?Controller=findWork" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
-            <a href="?Controller=myOffers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
+            <a href="?Controller=createDemand" onclick="w3_close()" id="createDemandBT" class="w3-bar-item w3-button w3-hover-white">Create Demand</a>
+            <a href="?Controller=findWork" onclick="w3_close()" id="FindWorkBT" class="w3-bar-item w3-button w3-hover-white">Find Work</a>
+            <a href="?Controller=myOffers" onclick="w3_close()" id="MyContractsBT" class="w3-bar-item w3-button w3-hover-white">My Contracts</a>
         <?php } else { ?>
-            <a href="?Controller=login" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
-            <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
+            <a href="?Controller=login" onclick="loginMM()" id="signInBT1" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+            <a href="?Controller=registration" id="signUpBT1" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
         <?php } ?>
-        <a href="?Controller=howTo" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="bottom: 10px; position: absolute; width: 90%">Q&A</a>
+        <a href="?Controller=howTo" onclick="w3_close()" id="qaBT" class="w3-bar-item w3-button w3-hover-white" style="bottom: 10px; position: absolute; width: 90%">Q&A</a>
         <div class="w3-hide-large">
             <br>
             <?php if (!isset($_SESSION['user_id'])) {?>
                 <div>
-                    <a href="?Controller=accountReviews" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+                    <a href="?Controller=accountReviews" id="MyAccountBT" class="w3-bar-item w3-button w3-hover-white">My Account</a>
                     <form method="post">
-                        <input type="submit" name="logout" class="w3-bar-item w3-button w3-hover-white" value="Log out">
+                        <input type="submit" id="logOutBT" name="logout" class="w3-bar-item w3-button w3-hover-white" value="Log out">
                     </form>
                 </div>
             <?php } else { ?>
-                <a href="?Controller=login" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
-                <a href="?Controller=registration" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
+                <a href="?Controller=login" id="signInBT" onclick="loginMM()" class="w3-bar-item w3-button w3-hover-white">Sign in</a>
+                <a href="?Controller=registration" id="signUpBT" class="w3-bar-item w3-button w3-hover-white">Sign up</a>
             <?php }?>
         </div>
     </div>
@@ -59,7 +59,7 @@
 
 <!-- Top menu on small screens -->
 <header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
-    <a href="?Controler=javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
+    <a href="?Controler=javascript:void(0)" id="openMenuBT" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
     <span>Red-i Correction</span>
 </header>
 
@@ -71,13 +71,13 @@
     <div class="w3-hide-small" style="float: right;">
         <?php if (isset($_SESSION['user_id'])) {?>
             <form method="post">
-            <a href="?Controller=accountReviews" class="w3-btn w3-round-large red-border no-border">My Account</a>
-                <input type="submit" name="logout" class="w3-btn w3-round-large red-border no-border" value="Log out">
+            <a href="?Controller=accountReviews" id="myAccountBT1" class="w3-btn w3-round-large red-border no-border">My Account</a>
+                <input type="submit" name="logout" id="logOutBT3" class="w3-btn w3-round-large red-border no-border" value="Log out">
             </form>
         <?php } else { ?>
 <!--            <a href="?Controller=login" onclick="post()" class="w3-btn w3-round-large red-border no-border">Sign in</a>-->
-            <input type="submit" onclick="loginMM()" class="w3-btn w3-round-large red-border no-border" value="Sign in">
-            <a href="?Controller=registration" onclick="set_current_metamask_address()" class="w3-btn w3-round-large red-border no-border">Sign up</a>
+            <input type="submit" onclick="loginMM()" id="signInBT3" class="w3-btn w3-round-large red-border no-border" value="Sign in">
+            <a href="?Controller=registration" id="signUpBT3" onclick="set_current_metamask_address()" class="w3-btn w3-round-large red-border no-border">Sign up</a>
 <!--            <input type="submit" onclick="post2()" class="w3-btn w3-round-large red-border no-border" value="Sign up">-->
         <?php }?>
     </div>

@@ -1,20 +1,20 @@
 <!-- Table of offers for large -->
 <div class="w3-row w3-hide-small">
     <div class="w3-row l8">
-        <div class="w3-col l2">Title</div>
-        <div class="w3-col l2">Pages</div>
-        <div class="w3-col l2">Difficulty</div>
-        <div class="w3-col l2">Deadline</div>
+        <div id="findWorkTitle" class="w3-col l2">Title</div>
+        <div id="findWorkPages" class="w3-col l2">Pages</div>
+        <div id="findWorkDifficulty" class="w3-col l2">Difficulty</div>
+        <div id="findWorkDeadline" class="w3-col l2">Deadline</div>
     </div>
 </div>
 <?php
 $i = 0;
 foreach ($_SESSION['works'] as $work) { ?>
-    <button class="w3-col l8 accordion">
-        <div class="w3-col l3" ><?=$work['title']?></div>
-        <div class="w3-col l3" ><?=$work['pages']?></div>
-        <div class="w3-col l3" ><?=$work['diff']?></div>
-        <div class="w3-col l2" ><?=$work['deadline']?></div>
+    <button id="correctingClosedBT<?=$work['request_id']?>" class="w3-col l8 accordion">
+        <div id="correctingClosedLabelDiv<?=$work['request_id']?>" class="w3-col l3" ><?=$work['title']?></div>
+        <div id="correctingClosedLabelDiv<?=$work['request_id']?>" class="w3-col l3" ><?=$work['pages']?></div>
+        <div id="correctingClosedLabelDiv<?=$work['request_id']?>" class="w3-col l3" ><?=$work['diff']?></div>
+        <div id="correctingClosedLabelDiv<?=$work['request_id']?>" class="w3-col l2" ><?=$work['deadline']?></div>
     </button>
     <div class="w3-col l8 panel" style="align-content: center">
         <form method="POST">
