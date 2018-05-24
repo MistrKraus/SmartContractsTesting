@@ -1,17 +1,17 @@
 <div class="w3-row">
     <?php if (isset($_SESSION['sentBinds']) || isset($_SESSION['sentOpen']) || isset($_SESSION['sentClosed'])) { ?>
-    <h2><b>Sent For Correction</b></h2>
+    <h2 id="sentH2"><b>Sent For Correction</b></h2>
     <?php if (isset($_SESSION['sentRequests']) && sizeof($_SESSION['sentRequests'])>0) { ?>
     <div class="w3-col l12">
         <!--     BINDS-->
-        <h2 class="w3-text-red">Requests</h2>
+        <h2 id="sentRequestsH2" class="w3-text-red">Requests</h2>
         <div class="w3-row w3-hide-small">
             <div class="w3-col w3-row l8">
-                <div id="titleDiv" class="w3-col l3">Title</div>
-                <div id="createdDiv" class="w3-col l3">Created</div>
-                <div id="deadlineDiv" class="w3-col l3">Deadline</div>
-                <div id="pagesDiv" class="w3-col l2">Pages</div>
-                <div id="difficultyDiv" class="w3-col l1">Difficulty</div>
+                <div id="sentRequestsTitle" class="w3-col l3">Title</div>
+                <div id="sentRequestsCreated" class="w3-col l3">Created</div>
+                <div id="sentRequestsDeadline" class="w3-col l3">Deadline</div>
+                <div id="sentRequestsPages" class="w3-col l2">Pages</div>
+                <div id="sentRequestsDiff" class="w3-col l1">Difficulty</div>
             </div>
         </div>
         <?php
@@ -26,7 +26,7 @@
             </button>
             <div class="w3-col l8 panel" style="align-content: center">
                     <form method="POST">
-                        <input type="submit" id="cancelOrderBT<?=$work['request_id']?>" value="Cancel Order" name="cancelOrder<?=$work['request_id']?>"
+                        <input type="submit" id="sentRequestsCancel<?=$work['request_id']?>" value="Cancel Order" name="cancelOrder<?=$work['request_id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
                     </form>
             </div>
@@ -35,13 +35,13 @@
     <?php } if (isset($_SESSION['sentBinds']) && sizeof($_SESSION['sentBinds'])>0) { ?>
         <div class="w3-col l12">
             <!--     BINDS-->
-            <h2 id="bindsH2" class="w3-text-red">Binds</h2>
+            <h2 id="sentBindsH2" class="w3-text-red">Binds</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
-                    <div id="titleLabel" class="w3-col l2">Title</div>
-                    <div id="deadlineLabel" class="w3-col l2">Deadline</div>
-                    <div id="ethereumLabel" class="w3-col l2">Ethereum</div>
-                    <div id="userLabel" class="w3-col l2">User</div>
+                    <div id="sentBindsTitle" class="w3-col l2">Title</div>
+                    <div id="sentBindsDeadline" class="w3-col l2">Deadline</div>
+                    <div id="sentBindsEth" class="w3-col l2">Ethereum</div>
+                    <div id="sentBindsUser" class="w3-col l2">User</div>
                 </div>
             </div>
             <?php
@@ -55,9 +55,9 @@
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
 <!--                    <form method="POST">-->
-                        <input type="submit" value="Reject" id="rejectBindBT<?=$work['id']?>" name="rejectBind<?=$work['id']?>"
+                        <input type="submit" value="Reject" id="sentBindsReject<?=$work['id']?>" name="rejectBind<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                        <input type="text" value="Accept" id="acceptBindBT<?=$work['id']?>" onclick="get_text('sentBinds', <?=$work['id']?>)" name="acceptBind<?=$work['id']?>"
+                        <input type="text" value="Accept" id="sentBindsAccept<?=$work['id']?>" onclick="get_text('sentBinds', <?=$work['id']?>)" name="acceptBind<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
 <!--                    </form>-->
                 </div>
@@ -66,7 +66,7 @@
     <?php } if (isset($_SESSION['sentOpen']) && sizeof($_SESSION['sentOpen'])>0) { ?>
         <div class="w3-col l12">
             <!--     OPEN-->
-            <h2 id="openLabel" class="w3-text-red">Open</h2>
+            <h2 id="sentOpenH2" class="w3-text-red">Open</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
                     <div id="titleLabel2" class="w3-col l2">Title</div>
@@ -99,7 +99,7 @@
     <?php } if (isset($_SESSION['sentClosed']) && sizeof($_SESSION['sentClosed'])>0) { ?>
         <div class="w3-col l12">
             <!--     CLOSED-->
-            <h2 class="w3-text-red">Closed</h2>
+            <h2 id="sentClosedH2" class="w3-text-red">Closed</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
                     <div id="closedTitleBT" class="w3-col l2">Title</div>
@@ -140,11 +140,11 @@
 <?php } if (isset($_SESSION['correctingBinds']) || isset($_SESSION['correctingOpen']) || isset($_SESSION['correctingClosed'])) { ?>
     <br><br>
     <div class="w3-col">
-        <h2><b>My Corrections</b></h2>
+        <h2 id="corH2"><b>My Corrections</b></h2>
         <?php if (isset($_SESSION['correctingBinds']) && sizeof($_SESSION['correctingBinds'])>0) {?>
         <div class="w3-col l12">
             <!--         My Binds-->
-            <h2 class="w3-text-red">Binds</h2>
+            <h2 id="corBindsH2" class="w3-text-red">Binds</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
                     <div id="bindsTitleDiv" class="w3-col l2">Title</div>
@@ -173,7 +173,7 @@
         <?php if (isset($_SESSION['correctingOpen']) && sizeof($_SESSION['correctingOpen'])>0) {?>
         <div class="w3-col l12">
             <!--     OPEN-->
-            <h2 id="OpenH2" class="w3-text-red">Open</h2>
+            <h2 id="corOpenH2" class="w3-text-red">Open</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
                     <div id="OpenTitleDiv" class="w3-col l2">Title</div>
@@ -209,7 +209,7 @@
         <?php if(isset($_SESSION['correctingClosed']) && sizeof($_SESSION['correctingClosed'])>0) {?>
         <div class="w3-col l12">
             <!--     CLOSED-->
-            <h2 id="closedH22" class="w3-text-red">Closed</h2>
+            <h2 id="corClosedH2" class="w3-text-red">Closed</h2>
             <div class="w3-row w3-hide-small">
                 <div class="w3-row l8">
                     <div id="closedTitleDiv" class="w3-col l2">Title</div>
