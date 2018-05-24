@@ -1,4 +1,5 @@
 <!-- Table of offers for large -->
+<?php if(sizeof($_SESSION['works'] > 0)) {?>
 <div class="w3-row w3-hide-small">
     <div class="w3-row l8">
         <div id="findWorkTitle" class="w3-col l2">Title</div>
@@ -8,7 +9,7 @@
     </div>
 </div>
 <?php
-$i = 0;
+//$i = 0;
 foreach ($_SESSION['works'] as $work) { ?>
     <button id="correctingClosedBT<?=$work['request_id']?>" class="w3-col l8 accordion">
         <div id="correctingClosedLabelDiv<?=$work['request_id']?>" class="w3-col l3" ><?=$work['title']?></div>
@@ -26,4 +27,5 @@ foreach ($_SESSION['works'] as $work) { ?>
             </div>
         </form>
     </div>
-    <?php $i++; } //}?>
+<?php //$i++;
+ } }?>

@@ -103,10 +103,7 @@ abstract class Controller {
 
     // zpracuje POST z kostry html
     public function processMain() {
-        $fromUrl = $_SESSION['fromUrl'];
-
         if (isset($_POST['logout'])) {
-            $_SESSION['fromUrl'] = $fromUrl;
             $this->logoutAndRedirect();
         }
     }
@@ -116,7 +113,7 @@ abstract class Controller {
         if (isset($_SESSION['user_id'])) {
             $user = User::getUser($_SESSION['user_id']);
 
-            if (empty($user)) {
+            if (sizeof($user) == 0) {
                 $this->logout();
             }
         }

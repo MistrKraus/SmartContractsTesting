@@ -1,5 +1,8 @@
 <div class="w3-row">
-    <?php if (isset($_SESSION['sentBinds']) || isset($_SESSION['sentOpen']) || isset($_SESSION['sentClosed'])) { ?>
+    <?php if (isset($_SESSION['sentRequests']) && sizeof($_SESSION['sentRequests']) > 0
+    || isset($_SESSION['sentBinds']) && sizeof($_SESSION['sentBinds']) > 0
+    || isset($_SESSION['sentOpen']) && sizeof($_SESSION['sentOpen']) > 0
+    || isset($_SESSION['sentClosed']) && sizeof($_SESSION['sentClosed']) > 0) { ?>
     <h2 id="sentH2"><b>Sent For Correction</b></h2>
     <?php if (isset($_SESSION['sentRequests']) && sizeof($_SESSION['sentRequests'])>0) { ?>
     <div class="w3-col l12">
@@ -18,19 +21,19 @@
         $i = 0;
         foreach ($_SESSION['sentRequests'] as $work) { //delete request, redirect z uploadu file a uploadu review ?>
             <button class="w3-col w3-row l8 accordion">
-                <div id="sentRequestsTitle<?=$work['request_id']?>" class="w3-col l3" ><?=$work['title']?></div>
-                <div id="sentRequestsCreated<?=$work['request_id']?>" class="w3-col l3" ><?=$work['created']?></div>
-                <div id="sentRequestsDeadline<?=$work['request_id']?>" class="w3-col l3" ><?=$work['deadline']?></div>
-                <div id="sentRequestsPages<?=$work['request_id']?>" class="w3-col l2" ><?=$work['pages']?></div>
-                <div id="sentRequestsDiff<?=$work['request_id']?>" class="w3-col l1" ><?=$work['diff']?></div>
+                <div id="sentRequestsTitle<?=$work['id']?>" class="w3-col l3" ><?=$work['title']?></div>
+                <div id="sentRequestsCreated<?=$work['id']?>" class="w3-col l3" ><?=$work['created']?></div>
+                <div id="sentRequestsDeadline<?=$work['id']?>" class="w3-col l3" ><?=$work['deadline']?></div>
+                <div id="sentRequestsPages<?=$work['id']?>" class="w3-col l2" ><?=$work['pages']?></div>
+                <div id="sentRequestsDiff<?=$work['id']?>" class="w3-col l1" ><?=$work['diff']?></div>
             </button>
             <div class="w3-col l8 panel" style="align-content: center">
-                    <form method="POST">
-                        <input type="submit" id="sentRequestsCancel<?=$work['request_id']?>" value="Cancel Order" name="cancelOrder<?=$work['request_id']?>"
-                               class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
-                    </form>
+                <form method="POST">
+                    <input type="submit" id="sentRequestsCancel<?=$work['request_id']?>" value="Cancel Order" name="cancelOrderSR<?=$work['id']?>"
+                           class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                </form>
             </div>
-            <?php $i++; }?>
+        <?php $i++; }?>
     </div>
     <?php } if (isset($_SESSION['sentBinds']) && sizeof($_SESSION['sentBinds'])>0) { ?>
         <div class="w3-col l12">
@@ -79,10 +82,10 @@
             $i = 0;
             foreach ($_SESSION['sentOpen'] as $work) { ?>
                 <button class="w3-col l8 accordion">
-                    <div id="senOpenLanel<?=$work['label']?>"  class="w3-col l3" ><?=$work['label']?></div>
-                    <div id="senOpenDeadline<?=$work['deadline']?>" class="w3-col l3" ><?=$work['deadline']?></div>
-                    <div id="senOpenEth<?=$work['eth']?>" class="w3-col l3" ><?=$work['eth']?></div>
-                    <div id="senOpenUser<?=$work['user']?>" class="w3-col l2" ><?=$work['user']?></div>
+                    <div id="sentOpenLanel<?=$work['id']?>"  class="w3-col l3" ><?=$work['label']?></div>
+                    <div id="sentOpenDeadline<?=$work['id']?>" class="w3-col l3" ><?=$work['deadline']?></div>
+                    <div id="sentOpenEth<?=$work['id']?>" class="w3-col l3" ><?=$work['eth']?></div>
+                    <div id="sentOpenUser<?=$work['id']?>" class="w3-col l2" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
                     <?php if ($work['state']==2){?>
@@ -96,7 +99,8 @@
                 </div>
                 <?php $i++; }?>
         </div>
-    <?php } if (isset($_SESSION['sentClosed']) && sizeof($_SESSION['sentClosed'])>0) { ?>
+    <?php }
+    if (isset($_SESSION['sentClosed']) && sizeof($_SESSION['sentClosed'])>0) { ?>
         <div class="w3-col l12">
             <!--     CLOSED-->
             <h2 id="sentClosedH2" class="w3-text-red">Closed</h2>
@@ -137,7 +141,9 @@
         </div>
     <?php } ?>
 </div>
-<?php } if (isset($_SESSION['correctingBinds']) || isset($_SESSION['correctingOpen']) || isset($_SESSION['correctingClosed'])) { ?>
+<?php } if (isset($_SESSION['correctingBinds']) && sizeof($_SESSION['correctingBinds'])>0
+            || isset($_SESSION['correctingOpen']) && sizeof($_SESSION['correctingOpen'])>0
+            || isset($_SESSION['correctingClosed']) && sizeof($_SESSION['correctingClosed'])>0) { ?>
     <br><br>
     <div class="w3-col">
         <h2 id="corH2"><b>My Corrections</b></h2>
@@ -196,8 +202,11 @@
                         <input id="downloadFileToCorrectBT<?=$work['id']?>" type="submit" value="Download File" name="DownloadToCorrect<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                         <?php if ($work['state']==3){?>
-                            <input id="uploadFileBT<?=$work['id']?>" type="submit" value="Upload File" name="UploadFile<?=$work['id']?>"
-                                   class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
+                            <input class="w3-btn w3-round-large" type="file" name="fileUp<?=$work['id']?>" value="Upload">
+                            <input type="submit" value="Confirm" name="UploadFile<?=$work['id']?>"
+                                   class="w3-col l3 w3-round-large red-border no-border" style="background-color: transparent">
+<!--                            <input id="uploadFileBT--><?//=$work['id']?><!--" type="submit" value="Upload File" name="UploadFile--><?//=$work['id']?><!--"-->
+<!--                                   class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">-->
                         <?php } ?>
                         <input id="cancelMyCorrectionBT<?=$work['id']?>" type="submit" value="Cancel" name="cancelMyCorrection<?=$work['id']?>"
                                class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">

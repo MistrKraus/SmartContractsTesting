@@ -33,7 +33,7 @@ class FulfillDemandController extends Controller {
             $uploadID=$_SESSION['uploadID'];
             $_SESSION['uploadID']="";
 //            $this->addMessage("sent correctly");
-            Work::uploadCorrected($filePath, $uploadID);
+//            Work::uploadCorrected($filePath, $uploadID);
 //            $this->addMessage("db correctly");
 
             // save to the database

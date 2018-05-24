@@ -15,19 +15,22 @@ class FindWorkController extends Controller {
         // Nastavení šablony
         $this->view = 'findWork';
 
-        $this->loggedOnly();
         $this->checkLogin();
+        $this->loggedOnly();
 
         unset($_SESSION['works']);
 
         $_SESSION['works'] = array(array());
         $userID = $_SESSION['user_id'];
         $_SESSION['works'] = Work::listWorks($userID);
+
         if ($_POST) {
             $this->processMain();
             $this->loggedOnly();
+
             foreach ($_SESSION['works'] as $work) {
-                if (isset($_POST["eth" . $work['request_id']]) && $_POST["eth" . $work['request_id']] > 0 && isset($_POST["bind" . $work['request_id']])) {
+                if (isset($_POST["eth" . $work['request_id']]) && $_POST["eth" . $work['request_id']] > 0
+                    && isset($_POST["bind" . $work['request_id']])) {
 
 //                    $this->addMessage("Correct" . " " . $work['request_id'] . " " . $userID . " " . $_POST["eth" . $work['request_id']]);
 
