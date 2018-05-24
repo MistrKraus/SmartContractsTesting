@@ -15,8 +15,8 @@ class FindWorkController extends Controller {
         // Nastavení šablony
         $this->view = 'findWork';
 
-        $this->loggedOnly();
         $this->checkLogin();
+        $this->loggedOnly();
 
         unset($_SESSION['works']);
 

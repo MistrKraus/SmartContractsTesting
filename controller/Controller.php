@@ -113,7 +113,7 @@ abstract class Controller {
         if (isset($_SESSION['user_id'])) {
             $user = User::getUser($_SESSION['user_id']);
 
-            if (empty($user)) {
+            if (sizeof($user) > 0) {
                 $this->logout();
             }
         }
