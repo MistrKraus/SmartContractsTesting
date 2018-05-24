@@ -32,7 +32,10 @@ spl_autoload_register("autoloadFunkce");
 //Db::connect("localhost", "cernyj", "ASDfaskjhjksasadf-asd", "cernyj");     // VOCABULARY
 Db::connect("localhost", "root", "", "cernyj");     // VOCABULARY
 
-$redirect = new RedirectController();
+$ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+
+$redirect = new RedirectController($ajax);
 $redirect->process(array($_SERVER['REQUEST_URI']));
 
-$redirect->buildView();
+if (!$ajax)
+    $redirect->buildView();

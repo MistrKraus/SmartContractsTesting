@@ -25,18 +25,24 @@ class SendReviewController extends Controller {
             $this->processMain();
             $this->loggedOnly();
 
-
             if(isset($_POST['submitReview']) && isset($_POST['stars'])){
 //                $this->addMessage($_POST['stars'] . " ... " . $_POST['review'] . " ... " . $_SESSION['bindReview']);
-                if(isset($_POST['review'])){
+                $this->addMessage($_POST['stars']);
+
+                if(isset($_POST['review']) && !empty($_POST['review'])){
                     $desc = $_POST['review'];
                 } else {
                     $desc = "No additional text";
                 }
-                Work::sendReview($_SESSION['bindReview'],$_POST['stars'], $desc);
-                $_SESSION['userReview'] = "";
-                $_SESSION['fileReview'] = "";
-                $_SESSION['bindReview'] = "";
+                $this->addMessage($desc);
+                $this->addMessage($_SESSION['bindReviewId']);
+
+                Work::sendReview($_SESSION['bindReviewId'], $_POST['stars'], $desc);
+                unset($_SESSION['userReview']);
+                unset($_SESSION['fileReview']);
+                unset($_SESSION['bindReviewId']);
+
+                $this->redirect('myOffers');
             }
         }
     }

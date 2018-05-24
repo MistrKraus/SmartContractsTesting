@@ -9,25 +9,25 @@
         <!--     BINDS-->
         <h2 class="w3-text-red">Requests</h2>
         <div class="w3-row w3-hide-small">
-            <div class="w3-col w3-row l8">
-                <div id="titleDiv" class="w3-col l3">Title</div>
-                <div id="createdDiv" class="w3-col l3">Created</div>
-                <div id="deadlineDiv" class="w3-col l3">Deadline</div>
-                <div id="pagesDiv" class="w3-col l2">Pages</div>
-                <div id="difficultyDiv" class="w3-col l1">Difficulty</div>
+            <div class="w3-row l9">
+                <div id="titleDiv" class="w3-col l2">Title</div>
+                <div id="createdDiv" class="w3-col l2">Created</div>
+                <div id="deadlineDiv" class="w3-col l2">Deadline</div>
+                <div id="pagesDiv" class="w3-col l1">Pages</div>
+                <div id="difficultyDiv" class="w3-col l2">Difficulty</div>
             </div>
         </div>
         <?php
         $i = 0;
         foreach ($_SESSION['sentRequests'] as $work) { //delete request, redirect z uploadu file a uploadu review ?>
-            <button class="w3-col w3-row l8 accordion">
+            <button class="w3-col l9 accordion">
                 <div id="sentRequestsTitle<?=$work['id']?>" class="w3-col l3" ><?=$work['title']?></div>
-                <div id="sentRequestsCreated<?=$work['id']?>" class="w3-col l3" ><?=$work['created']?></div>
+                <div id="sentRequestsCreated<?=$work['id']?>" class="w3-col l2" ><?=$work['created']?></div>
                 <div id="sentRequestsDeadline<?=$work['id']?>" class="w3-col l3" ><?=$work['deadline']?></div>
                 <div id="sentRequestsPages<?=$work['id']?>" class="w3-col l2" ><?=$work['pages']?></div>
                 <div id="sentRequestsDiff<?=$work['id']?>" class="w3-col l1" ><?=$work['diff']?></div>
             </button>
-            <div class="w3-col l8 panel" style="align-content: center">
+            <div class="w3-col l9 panel" style="align-content: center">
                 <form method="POST">
                     <input type="submit" id="cancelOrderBT<?=$work['request_id']?>" value="Cancel Order" name="cancelOrderSR<?=$work['id']?>"
                            class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
@@ -57,12 +57,12 @@
                     <div class="w3-col l2" id="sentBindsUser<?=$work['id']?>" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
-<!--                    <form method="POST">-->
+                    <form method="POST">
                         <input type="submit" value="Reject" id="rejectBindBT<?=$work['id']?>" name="rejectBind<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                        <input type="text" value="Accept" id="acceptBindBT<?=$work['id']?>" onclick="get_text('sentBinds', <?=$work['id']?>)" name="acceptBind<?=$work['id']?>"
+                        <input type="submit" value="Accept" id="acceptBindBT<?=$work['id']?>" onclick="get_text('sentBinds', <?=$work['id']?>)" name="acceptBind<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
-<!--                    </form>-->
+                    </form>
                 </div>
                 <?php $i++; }?>
         </div>
@@ -116,14 +116,14 @@
             $i = 0;
             foreach ($_SESSION['sentClosed'] as $work) { ?>
                 <button class="w3-col l8 accordion">
-                    <div id="sentClosedLabel<?=$work['label']?>" class="w3-col l3" ><?=$work['label']?></div>
-                    <div id="sentClosedReceived<?=$work['received']?>" class="w3-col l3" ><?=$work['received']?></div>
-                    <div id="sentClosedEth<?=$work['eth']?>" class="w3-col l3" ><?=$work['eth']?></div>
-                    <div id="sentClosedUser<?=$work['user']?>" class="w3-col l2" ><?=$work['user']?></div>
+                    <div id="sentClosedLabel<?=$work['id']?>" class="w3-col l3" ><?=$work['label']?></div>
+                    <div id="sentClosedReceived<?=$work['id']?>" class="w3-col l3" ><?=$work['received']?></div>
+                    <div id="sentClosedEth<?=$work['id']?>" class="w3-col l3" ><?=$work['eth']?></div>
+                    <div id="sentClosedUser<?=$work['id']?>" class="w3-col l2" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
                     <form method="POST">
-                        <?php if($work['review']<0){?>
+                        <?php if($work['state']==4){?>
                             <input id="sendReviewBT<?=$work['id']?>" type="submit" value="Send Review" name="SendReview<?=$work['id']?>"
                                    class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                         <?php } else {?>
@@ -192,24 +192,27 @@
             $i = 0;
             foreach ($_SESSION['correctingOpen'] as $work) { ?>
                 <button class="w3-col l8 accordion">
-                    <div id="correctingOpenLabel<?=$work['label']?>" class="w3-col l3" ><?=$work['label']?></div>
-                    <div id="correctingOpenDeadline<?=$work['deadline']?>" class="w3-col l3" ><?=$work['deadline']?></div>
-                    <div id="correctingOpenEth<?=$work['eth']?>" class="w3-col l3" ><?=$work['eth']?></div>
-                    <div id="correctingOpenUser<?=$work['user']?>" class="w3-col l2" ><?=$work['user']?></div>
+                    <div id="correctingOpenLabel<?=$work['id']?>" class="w3-col l3" ><?=$work['label']?></div>
+                    <div id="correctingOpenDeadline<?=$work['id']?>" class="w3-col l3" ><?=$work['deadline']?></div>
+                    <div id="correctingOpenEth<?=$work['id']?>" class="w3-col l3" ><?=$work['eth']?></div>
+                    <div id="correctingOpenUser<?=$work['id']?>" class="w3-col l2" ><?=$work['user']?></div>
                 </button>
                 <div class="w3-col l8 panel" style="align-content: center">
-                    <form method="post">
-                        <input id="downloadFileToCorrectBT<?=$work['id']?>" type="submit" value="Download File" name="DownloadToCorrect<?=$work['id']?>"
+                    <form enctype="multipart/form-data" method="post">
+                        <?php if($work['state']==2) {?>
+                        <input id="downloadFileToCorrectBT<?=$work['id']?>" type="submit" value="Download File"
+                               name="downloadToCorrect<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                        <?php if ($work['state']==3){?>
-                            <input class="w3-btn w3-round-large" type="file" name="fileUp<?=$work['id']?>" value="Upload">
-                            <input type="submit" value="Confirm" name="UploadFile<?=$work['id']?>"
-                                   class="w3-col l3 w3-round-large red-border no-border" style="background-color: transparent">
-<!--                            <input id="uploadFileBT--><?//=$work['id']?><!--" type="submit" value="Upload File" name="UploadFile--><?//=$work['id']?><!--"-->
-<!--                                   class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">-->
-                        <?php } ?>
                         <input id="cancelMyCorrectionBT<?=$work['id']?>" type="submit" value="Cancel" name="cancelMyCorrection<?=$work['id']?>"
-                               class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                                   class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">
+                        <?php } elseif ($work['state']==3) { ?>
+                            <div class="w3-row l8">
+<!--                                <input class="w3-btn w3-col l7 w3-round-large" type="file" name="fileUp--><?//=$work['id']?><!--" value="Upload">-->
+                                <input class="w3-btn w3-col l7 w3-round-large" type="file" name="fileUp<?=$work['id']?>" value="Upload">
+                                <input type="submit" value="Upload" name="UploadFile<?=$work['id']?>"
+                                       class="w3-col l2 w3-round-large red-border no-border" style="background-color: transparent">
+                            </div>
+                        <?php } ?>
                     </form>
                 </div>
                 <?php $i++; } }?>
@@ -239,7 +242,7 @@
                 <?php if($work['review']>0){?>
                 <div class="w3-col l8 panel" style="text-align: left">
                     <label id="correctingClosedReviewLabel<?=$work['review']?>">Your rating: [<?=$work['review'] ."/10"?>]</label>
-                    <?php if(strlen($work['review_text'])>0 && $work['review_text']!="No additional text"){?> <br>
+                    <?php if(strlen($work['review_text'])>0){?> <br>
                         <label id="correctingClosedReviewTextLabel<?=$work['review']?>"><?="\"".$work['review_text'] . "\""?></label>
                     <?php } ?>
                 </div>

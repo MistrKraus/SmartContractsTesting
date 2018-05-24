@@ -18,6 +18,11 @@ class MyOffersController extends Controller {
 
         $this->loggedOnly();
         $this->checkLogin();
+        if (isset($_SESSION['test'])) {
+            $this->addMessage($_SESSION['test']);
+            echo $_SESSION['test'];
+        }
+
 //        $this->addMessage($_SESSION['user_id'] . " " . $_SESSION['username']);
 //
         $userID = $_SESSION['user_id'];
@@ -31,10 +36,10 @@ class MyOffersController extends Controller {
         $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
         $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
 
-        $_SESSION['uploadID'] = "";
-        $_SESSION['userReview'] = "";
-        $_SESSION['fileReview'] = "";
-        $_SESSION['bindReview'] = "";
+        unset($_SESSION['uploadID']);
+        unset($_SESSION['userReview']);
+        unset($_SESSION['fileReview']);
+        unset($_SESSION['bindReview']);
 
         if ($_POST) {
             $this->processMain();
@@ -46,10 +51,12 @@ class MyOffersController extends Controller {
 //                $this->addMessage($_POST['cancelOrderSR2']['id']);
                 foreach ($_SESSION['sentRequests'] as $bind) {
                     if (isset($_POST['cancelOrderSR' . $bind['id']])) {
-                        if (Work::deleteRequest($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
-                        }
-                        $this->redirect('myOffers');
+                        Work::deleteRequest($bind['files_id']);
+//                        $this->redirect('myOffers');
+//                        if (Work::deleteRequest($bind['id']) == 0) {
+//                            $this->addMessage("Chyba");
+//                        }
+//                        $this->redirect('myOffers');
                     }
                 }
             }
@@ -61,26 +68,17 @@ class MyOffersController extends Controller {
                         if (Work::rejectBind($bind['id']) == -1) {
                             $this->addMessage("Chyba");
                         }
-                        $this->redirect('myOffers');
+//                        $this->redirect('myOffers');
                     // prijimani nabidky
-                    } elseif (isset($_POST['acceptBind'.$bind['id']])) {
-                        if(Work::acceptBind($bind['id'], $_SESSION['sentBinds']['req_id'])==-1){
-                            $this->addMessage("Chyba");
-                        }
-                        $this->redirect('myOffers');
-                    }
-                }
-
-//                // prijimani nabidky
-//                foreach ($_SESSION['sentBinds'] as $bind) {
-//                    if (isset($_POST['acceptBind'.$bind['id']])) {
+//                    } elseif (isset($_POST['acceptBind'.$bind['id']])) {
+//
+//                        //TODO odkomentovat
 //                        if(Work::acceptBind($bind['id'], $_SESSION['sentBinds']['req_id'])==-1){
 //                            $this->addMessage("Chyba");
 //                        }
-//
-//                        $this->redirect('myOffers');
-//                    }
-//                }
+////                        $this->redirect('myOffers');
+                    }
+                }
             }
 
             if($_SESSION['sentOpen']!="") {
@@ -89,7 +87,7 @@ class MyOffersController extends Controller {
                         if (Work::rejectBind($bind['id']) == -1) {
                             $this->addMessage("Chyba");
                         }
-                        $this->redirect('myOffers');
+//                        $this->redirect('myOffers');
                     }
                 }
             }
@@ -97,8 +95,8 @@ class MyOffersController extends Controller {
             if($_SESSION['sentClosed']!="") {
                 foreach ($_SESSION['sentClosed'] as $bind) {
                     if (isset($_POST['DownloadCorrected' . $bind['id']])) {
-                        $this->downloadFile($_SESSION['sentClosed']['file_id']);
-
+                        $this->downloadFile($bind['file_id']);
+//                        $this->redirect('myOffers');
 //                        if (basename($_POST['fileDwn']) == $_POST['fileDwn']) {
 //                            $filename = $_POST['fileDwn'];
 //                        } else {
@@ -152,7 +150,7 @@ class MyOffersController extends Controller {
                         if (Work::rejectBind($bind['id']) == -1) {
                             $this->addMessage("Chyba");
                         }
-                        $this->redirect('myOffers');
+//                        $this->redirect('myOffers');
                     }
                 }
             }
@@ -163,8 +161,15 @@ class MyOffersController extends Controller {
                         if (Work::rejectBind($bind['id']) == -1) {
                             $this->addMessage("Chyba");
                         }
-                    } elseif (isset($_POST['UploadFile' . $bind['id']]) && isset($_FILES['fileUp'])) {
+                        // download filu
+                    } elseif (isset($_POST['downloadToCorrect' . $bind['id']])) {
+//                        $this->addMessage($bind['id'] . " ma file " . $bind['file_id']);
+                        $this->downloadFile($bind['file_id']);
+                        Work::lockBind($bind['id']);
+                        $this->redirect('myOffers');
+                    } elseif (isset($_POST['UploadFile' . $bind['id']]) && isset($_FILES['fileUp'.$bind['id']])) {
                         $id = $bind['id'];
+
                         $fileName = $_FILES['fileUp'.$id]['name'];
                         $fileType = $_FILES['fileUp'.$id]['type'];
                         $fileSize = $_FILES['fileUp'.$id]['size'];
@@ -172,6 +177,10 @@ class MyOffersController extends Controller {
                         $fileHash = md5($_FILES['fileUp'.$id]['tmp_name']);
 
                         $fileId = File::insertCorrectedFile($fileName, $fileType, $fileSize, $fileData, $fileHash);
+
+                        $this->addMessage($fileId);
+                        if ($fileId == -1)
+                            return;
 
                         Work::fulfillDemand($bind['id'], $bind['request_id'], $fileId);
 //                        $this->redirect("fulfillDemand");
@@ -182,7 +191,9 @@ class MyOffersController extends Controller {
             if ($_SESSION['correctingClosed']!=0) {
                 foreach ($_SESSION['correctingClosed'] as $bind) {
                     if(isset($_POST['DownloadToCorrect' . $bind['id']])) {
+                        $this->addMessage($bind['id'] . " ma file " . $bind['file_id']);
                         $this->downloadFile($bind['file_id']);
+
 //                        $req = Work::getFilenameToCorrect($bind['id']);
 //                        if(sizeof($req)>0) {
 //                            $path = $req[0]['file'];
@@ -215,6 +226,7 @@ class MyOffersController extends Controller {
                     }
                 }
             }
+            $this->redirect('myOffers');
         }
     }
 

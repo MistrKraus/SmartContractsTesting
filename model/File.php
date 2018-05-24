@@ -9,8 +9,7 @@
 class File {
 
     public static function getFile($id) {
-        $id = 12;
-        return Db::getFirstRow("SELECT * FROM files WHERE id=:id", array(':id'=>$id));
+        return Db::getFirstRow("SELECT * FROM files WHERE files_id=:id", array(':id'=>$id));
     }
 
     public static function getAllFiles() {
@@ -27,11 +26,7 @@ class File {
     }
 
     public static function insertCorrectedFile($name, $type, $size, $data, $hash) {
-        if (Db::insert("files", array('name'=>$name, 'type'=>$type, 'size'=>$size, 'data'=>$data,
-                'hash'=>$hash) == -1)) {
-            return -1;
-        } else {
-            return Db::getLastId();
-        }
+        Db::insert("files", array('name'=>$name, 'type'=>$type, 'size'=>$size, 'data'=>$data, 'hash'=>$hash));
+        return Db::getLastId();
     }
 }

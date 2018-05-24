@@ -26,26 +26,26 @@ class Work {
 
     public static function getClosedSentCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, f.files_id AS file_id, R.title AS label, b.corrected AS received, 
-              b.eth_demand AS eth, u.username AS user, b.review, b.review_text FROM binds AS b
+              b.eth_demand AS eth, u.username AS user, b.review, b.review_text, b.state FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
               JOIN users AS u ON u.users_id=b.users_id
               JOIN files AS f ON f.files_id=R.corrected_file_id
-              WHERE R.client_id=:userId AND b.state=4", array(':userId'=>$userId));
+              WHERE R.client_id=:userId AND b.state>3", array(':userId'=>$userId));
     }
 
     public static function getMyBinds($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
               u.username AS user FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
-              JOIN users AS u ON u.users_id=b.users_id
+              JOIN users AS u ON u.users_id=R.client_id
               WHERE b.users_id=:userId AND b.state=0", array(':userId'=>$userId));
     }
 
     public static function getOpenMyCorrections($userId) {
-        return Db::getAll("SELECT b.binds_id AS id, b.request_id AS request_id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
+        return Db::getAll("SELECT b.binds_id AS id, R.file_id AS file_id, b.request_id AS request_id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
               u.username AS user, b.state FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
-              JOIN users AS u ON u.users_id=b.users_id
+              JOIN users AS u ON u.users_id=R.client_id
               WHERE b.users_id=:userId AND (b.state=2 OR b.state=3)", array(':userId'=>$userId));
     }
 
@@ -53,9 +53,9 @@ class Work {
         return Db::getAll("SELECT b.binds_id AS id, f.files_id AS file_id, R.title AS label, b.corrected AS received, b.eth_demand AS eth,
               u.username AS user, b.review, b.review_text FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
-              JOIN users AS u ON u.users_id=b.users_id
+              JOIN users AS u ON u.users_id=R.client_id
               JOIN files AS f ON f.files_id=R.file_id
-              WHERE b.users_id=:userId AND b.state=4", array(':userId'=>$userId));
+              WHERE b.users_id=:userId AND b.state>3", array(':userId'=>$userId));
     }
 
 //    public static function createDemand($userId, $label, $pages, $diff, $deadline, $mess, $file, $hash) {
@@ -84,6 +84,10 @@ class Work {
 
     public static function rejectBind($bindId) {
         return Db::query("UPDATE binds SET state=1 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
+    }
+
+    public static function cancelBind($bindId) {
+        return Db::query("UPDATE binds SET state=0 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
     }
 
     public static function getBindById($bindId) {
@@ -123,20 +127,20 @@ class Work {
 //
 //    }
 
-    public static function uploadCorrected($filePath, $uploadID) {
-        $request = db::getAll("SELECT request_id FROM binds WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID));
-        if(sizeof($request)>0) {
-            $requestID = $request[0]['request_id'];
-//            echo "---------------------------------------------------" . $requestID;
-//            echo "UPDATE binds SET state=4, corrected=". date("y-m-d") ." WHERE binds_id=" . $uploadID;
-            Db::query("UPDATE request SET corrected_file=:file WHERE request_id=:request_id", array(':file' => $filePath, ':request_id' => $requestID));
-            Db::query("UPDATE binds SET state=4, corrected=:corrected_date WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID, ':corrected_date' => date("y-m-d")));
-        }
-    }
+//    public static function uploadCorrected($filePath, $uploadID) {
+//        $request = db::getAll("SELECT request_id FROM binds WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID));
+//        if(sizeof($request)>0) {
+//            $requestID = $request[0]['request_id'];
+////            echo "---------------------------------------------------" . $requestID;
+////            echo "UPDATE binds SET state=4, corrected=". date("y-m-d") ." WHERE binds_id=" . $uploadID;
+//            Db::query("UPDATE request SET corrected_file=:file WHERE request_id=:request_id", array(':file' => $filePath, ':request_id' => $requestID));
+//            Db::query("UPDATE binds SET state=4, corrected=:corrected_date WHERE binds_id=:bind_id", array(':bind_id'=>$uploadID, ':corrected_date' => date("y-m-d")));
+//        }
+//    }
 
     public static function fulfillDemand($bind, $request_id, $fileId) {
-        Db::query("UPDATE request SET corrected_file_id=:file WHERE request_id=:request_id", array(':request_id'=>$request_id, ':file'=>$fileId));
-        Db::query("UPDATE binds SET state=4, corrected=:corrected_date WHERE binds_id=:bind_id", array('bind_id'=>$bind));
+        Db::query("UPDATE request SET corrected_file_id=:file WHERE request_id=:request_id", array(':file'=>$fileId, ':request_id'=>$request_id));
+        Db::query("UPDATE binds SET state=4, corrected=:corrected_date WHERE binds_id=:bind_id", array(':corrected_date'=> date("y-m-d"), ':bind_id'=>$bind));
     }
 
     public static function getFilenameToCorrect($id) {
@@ -157,11 +161,11 @@ class Work {
     }
 
     public static function sendReview($id, $stars, $desc) {
-        Db::query("UPDATE binds SET review_text=:descr, review=:stars WHERE binds_id=:bind_id", array(':bind_id'=>$id,':stars'=>$stars, ':descr'=>$desc));
+        Db::query("UPDATE binds SET review_text=:descr, review=:stars, state=5 WHERE binds_id=:bind_id", array(':descr'=>$desc, ':bind_id'=>$id,':stars'=>$stars));
     }
 
     public static function checkUserID($userID) {
-        $array = Db::getAll("SELECT binds_id FROM binds WHERE state!=1 AND users_id=:userID",array('userID'=>$userID));
+        $array = Db::getAll("SELECT binds_id FROM binds WHERE state!=1 AND users_id=:userID",array(':userID'=>$userID));
         return sizeof($array)>0;
     }
 
@@ -170,15 +174,24 @@ class Work {
     }
 
     public static function getSentRequests($userID) {
-        return Db::getAll("SELECT r.request_id AS id, r.title, f.pages, f.diff, r.deadline,
-            r.description, r.created FROM request AS r 
-            JOIN files AS f ON f.files_id=r.file_id
-            WHERE r.request_id NOT IN (SELECT r.request_id FROM binds WHERE state >1) AND r.client_id=:usersID",
-            array('usersID'=>$userID));
+        return Db::getAll("SELECT r.request_id AS id, f.files_id AS files_id, r.title AS title, f.pages AS pages, f.diff AS diff
+              , r.deadline AS deadline, r.description, r.created FROM request AS r 
+            JOIN files AS f ON f.files_id=r.file_id 
+            WHERE r.request_id NOT IN (SELECT request_id FROM binds WHERE state >1) AND r.client_id=:usersID",
+            array(':usersID'=>$userID));
     }
 
     public static function deleteRequest($id) {
-        Db::query("DELETE FROM request WHERE request_id=:id", array(':id'=>$id));
+//        Db::query("DELETE FROM binds WHERE request_id=:id;", array(':id'=>$id));
+//        Db::query("DELETE FROM request WHERE request_id=:id", array(':id'=>$id));
+        Db::query("DELETE FROM files WHERE files_id=:id", array(':id'=>$id));
     }
 
+    public static function getContractData($id) {
+        return Db::getFirstRow("SELECT u.eth_wallet_address AS wallet, r.deadline, (b.eth_demand * 1000000000000000000) AS wei, f.hash FROM binds AS b
+              JOIN request AS r ON r.request_id=b.request_id
+              JOIN files AS f ON f.files_id=r.file_id
+              JOIN users AS u ON u.users_id=b.users_id
+              WHERE b.binds_id=:id", array(':id'=>$id));
+    }
 }
