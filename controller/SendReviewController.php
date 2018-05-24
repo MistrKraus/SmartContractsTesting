@@ -9,10 +9,12 @@
 class SendReviewController extends Controller {
 
     function process($params) {
+        $bind = Work::getBindById($_SESSION['bindReviewId']);
+
         // Hlavička stránky
         $this->header['title'] = 'Sent Review';
         // Podnadpis strán
-        $this->header['subtitle'] = $_SESSION['userReview'] . " - " . $_SESSION['fileReview'];
+        $this->header['subtitle'] = $bind['user'] . " - " . $bind['title'];
         // Nastavení šablony
         $this->view = 'sendReview';
 

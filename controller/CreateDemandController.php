@@ -14,6 +14,7 @@ class CreateDemandController extends Controller {
         $this->checkLogin();
 
 
+
         if ($_POST) {
             $this->processMain();
             $this->loggedOnly();
@@ -24,75 +25,48 @@ class CreateDemandController extends Controller {
                 return;
             }
 
-            $this->addMessage("Filled correctly");
+//            $this->addMessage("Filled correctly");
 
             $label = $_POST['label'];
             $pages = $_POST['pages'];
             $diff = $_POST['diff'];
             $deadline = $_POST['deadline'];
-            $uploadDir = "./uploads/";
+
+            // FILE
+
+            $fileName = $_FILES['fileUp']['name'];
+            $fileType = $_FILES['fileUp']['type'];
+            $fileSize = $_FILES['fileUp']['size'];
+            $fileData = file_get_contents($_FILES['fileUp']['tmp_name']);
+//            $fileHash = md5_file($_FILES['fileUp']);
+            $fileHash = md5($_FILES['fileUp']['tmp_name']);
+
+//            $this->addMessage(md5($_FILES['fileUp']['tmp_name']));
+
+//            $uploadDir = "./uploads/";
             if (isset($_POST['description']) && $_POST['description']!="")
                 $desc = $_POST['description'];
             else
                 $desc = "No description";
 
-            if (!$this->isDemandNew($label, $pages, $diff, $deadline)) {
-                $this->addMessage("I'm old");
-                return;
-            }
+//            if (!$this->isDemandNew($label, $pages, $diff, $deadline)) {
+//                $this->addMessage("I'm old");
+//                return;
+//            }
 
-            $file = $_FILES['fileUp']['name'];
-            $tmpfile = $file;
-//
-            if (file_exists($uploadDir.$file))
-            {
-                $i= 1;
-
-                while (file_exists($uploadDir.$tmpfile))
-                {
-                    // get file extension
-                    $extension = pathinfo($uploadDir.$tmpfile, PATHINFO_EXTENSION);
-
-                    // get file's name
-                    $filename = pathinfo($uploadDir.$file, PATHINFO_FILENAME);
-
-                    // add and combine the filename, iterator, extension
-                    $new_filename = $filename . '-' . $i . '.' . $extension;
-
-                    // add file name to the end of the path to place it in the new directory; the while loop will check it again
-                    $tmpfile = $new_filename;
-                    $i++;
-
-                }
-            }
-            $file = $tmpfile;
-
-//            $this->addMessage($file);
-//            move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $file) or die("Cannot copy uploaded file " . dirname());
-            if(!move_uploaded_file($_FILES['fileUp']['tmp_name'], $uploadDir . $file)){
-                $this->addMessage("nope");
-//                $this->addMessage("nope " . $_FILES['fileUp']['tmp_name'] . " " . $_FILES['fileUp']['size'] . " " . $_FILES['fileUp']['name'] . " " . $file);
-                if(is_dir($uploadDir)){
-                    $this->addMessage("yes");
-                }
-            }else {
-                $this->addMessage("yes");
-                $this->addMessage("I'm new");
-//
                 $_SESSION['lastPost']['label'] = $label;
                 $_SESSION['lastPost']['pages'] = $pages;
                 $_SESSION['lastPost']['diff'] = $diff;
                 $_SESSION['lastPost']['deadline'] = $deadline;
                 $_SESSION['lastPost']['desc'] = $desc;
 
-                $filePath = $uploadDir . $file;
-
-                $hash = md5_file($filePath);
                 // save to the database
-                // user logged in?
-                $userId = $_SESSION['user_id'];
-                Work::createDemand($userId, $label, $pages, $diff, $deadline, $desc, $filePath, $hash);
-            }
+            $userId = $_SESSION['user_id'];
+            $fileId = File::insertFile($fileName, $fileType, $fileSize, $fileData, $diff, $pages, $fileHash);
+//                var_dump($fileId);
+
+            if ($fileId != -1)
+                Work::createDemand($userId, $label, $deadline, $desc, $fileId);
         }
     }
 
@@ -122,11 +96,8 @@ class CreateDemandController extends Controller {
         if ($_FILES['fileUp']['size'] == 0) {
             $this->addMessage("Zero byte file");
             $isOk = false;
-        } elseif ($_FILES['fileUp']['size'] > $_POST['MAX_SIZE']) {
-            $this->addMessage("Too big file (max. 8MB)");
-            $isOk = false;
-        } elseif (!is_uploaded_file($_FILES['fileUp']['tmp_name'])){
-            $this->addMessage("File injected, not uploaded");
+        } elseif ($_FILES['fileUp']['size'] > 16777216) {
+            $this->addMessage("Too big file (max. 16MB)");
             $isOk = false;
         }
 
