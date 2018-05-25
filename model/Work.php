@@ -18,7 +18,7 @@ class Work {
 
     public static function getOpenSentCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user, b.state FROM binds AS b
+              u.username AS user, b.state, b.smart_contract AS address FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
               JOIN users AS u ON u.users_id=b.users_id
               WHERE R.client_id=:userId AND (b.state=2 OR b.state=3)", array(':userId'=>$userId));
@@ -43,7 +43,7 @@ class Work {
 
     public static function getOpenMyCorrections($userId) {
         return Db::getAll("SELECT b.binds_id AS id, R.file_id AS file_id, b.request_id AS request_id, R.title AS label, R.deadline AS deadline, b.eth_demand AS eth,
-              u.username AS user, b.state FROM binds AS b
+              u.username AS user, b.state, b.smart_contract AS address FROM binds AS b
               JOIN request AS R ON R.request_id=b.request_id
               JOIN users AS u ON u.users_id=R.client_id
               WHERE b.users_id=:userId AND (b.state=2 OR b.state=3)", array(':userId'=>$userId));
@@ -188,10 +188,24 @@ class Work {
     }
 
     public static function getContractData($id) {
-        return Db::getFirstRow("SELECT u.eth_wallet_address AS wallet, r.deadline, (b.eth_demand * 1000000000000000000) AS wei, f.hash FROM binds AS b
+        return Db::getFirstRow("SELECT u.eth_wallet_address AS wallet, r.deadline, (b.eth_demand * 1) AS wei,
+              f.hash FROM binds AS b
               JOIN request AS r ON r.request_id=b.request_id
               JOIN files AS f ON f.files_id=r.file_id
               JOIN users AS u ON u.users_id=b.users_id
               WHERE b.binds_id=:id", array(':id'=>$id));
+    }
+
+    public static function setContractAddress($contract_id, $contract_add) {
+        Db::query("UPDATE binds SET smart_contract=:address WHERE binds_id=:id",
+            array(':address'=>$contract_add, ':id'=>$contract_id));
+    }
+
+    public static function contractFailed($contract_id) {
+//        Db::query("UPDATE binds SET state=1 WHERE request_id=:request_id", array('request_id'=>$requestId));
+//        return Db::query("UPDATE binds SET state=2 WHERE binds_id=:bind_id", array(':bind_id'=>$bindId));
+
+        Db::query("UPDATE binds SET state=0
+            WHERE binds_id=:bind_id", array(':bind_id'=>$contract_id));
     }
 }

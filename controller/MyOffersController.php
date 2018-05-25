@@ -18,10 +18,10 @@ class MyOffersController extends Controller {
 
         $this->loggedOnly();
         $this->checkLogin();
-        if (isset($_SESSION['test'])) {
-            $this->addMessage($_SESSION['test']);
-            echo $_SESSION['test'];
-        }
+
+//        if (isset($_SESSION['test']))
+//            $this->addMessage($_SESSION['test']);
+        unset($_SESSION['test']);
 
 //        $this->addMessage($_SESSION['user_id'] . " " . $_SESSION['username']);
 //
@@ -81,16 +81,16 @@ class MyOffersController extends Controller {
                 }
             }
 
-            if($_SESSION['sentOpen']!="") {
-                foreach ($_SESSION['sentOpen'] as $bind) {
-                    if (isset($_POST['cancelOrder' . $bind['id']])) { //pripadne TODO reg. vyrazy
-                        if (Work::rejectBind($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
-                        }
-//                        $this->redirect('myOffers');
-                    }
-                }
-            }
+//            if($_SESSION['sentOpen']!="") {
+//                foreach ($_SESSION['sentOpen'] as $bind) {
+//                    if (isset($_POST['cancelOrder' . $bind['id']])) { //pripadne TODO reg. vyrazy
+//                        if (Work::rejectBind($bind['id']) == -1) {
+//                            $this->addMessage("Chyba");
+//                        }
+////                        $this->redirect('myOffers');
+//                    }
+//                }
+//            }
 
             if($_SESSION['sentClosed']!="") {
                 foreach ($_SESSION['sentClosed'] as $bind) {
