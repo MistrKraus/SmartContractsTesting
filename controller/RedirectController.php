@@ -12,6 +12,19 @@ class RedirectController extends Controller {
      * @var Kontroler
      */
     protected $controller;
+    /**
+     * @var ajaxovy pozadavek
+     */
+    private $ajax;
+
+    /**
+     * RedirectController constructor.
+     * @param $ajax
+     */
+    public function __construct($ajax) {
+        $this->ajax = $ajax;
+    }
+
 
     // Metoda převede pomlčkovou variantu controlleru na název třídy
     private function dashToCamelNotation($text) {
@@ -63,7 +76,10 @@ class RedirectController extends Controller {
             $this->redirect("intro");
         }
 
-        $ControllerClass = $this->dashToCamelNotation(array_shift($parsedURL)) . 'Controller';
+        if (!$this->ajax)
+            $ControllerClass = $this->dashToCamelNotation(array_shift($parsedURL)) . 'Controller';
+        else
+            $ControllerClass = $this->dashToCamelNotation(array_shift($parsedURL)) . 'AjaxController';
 
         if (isset($_SESSION['description'])) {
             $fromClass = $_SESSION['description'];
