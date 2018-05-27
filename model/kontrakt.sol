@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.24;
 
 /*
 * smart kontrakt, do kterého se uloží platba (pod promennou msg.value), adresa korektora, adresa zakaznika
@@ -17,7 +17,7 @@ contract escrow {
     //@param _korektor je adresa korektora
     //@param _expiration_time_in_hours udava po kolika hodinach muze zakaznik kontrakt zrusit
     // kontrakt pod globalni promenou msg.value ulozi penize za korekci - msg.value se urcuje mimo tento kontrakt - pri jeho vytvareni
-    function escrow(address _korektor, string _expiration_date, string _document_hash) public payable {
+    constructor(address _korektor, string _expiration_date, string _document_hash) public payable {
         customer = msg.sender;
         corrector = _korektor;
         expiration_date = _expiration_date;
