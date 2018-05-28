@@ -61,7 +61,7 @@
                         <input type="submit" value="Reject" id="rejectBindBT<?=$work['id']?>" name="rejectBind<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
                     </form>
-                        <button id="acceptBindBT<?=$work['id']?>" onclick="prepare_and_deploy(<?=$work['id']?>,<?=$work['req_id']?>)" name="acceptBind<?=$work['id']?>"
+                        <button id="acceptBindBT<?=$work['id']?>" onclick="prepare_and_deploy('<?=$work['id']?>', '<?=$work['req_id']?>')" name="acceptBind<?=$work['id']?>"
                                 class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">Accept</button>
                 </div>
                 <?php $i++; }?>
@@ -94,7 +94,7 @@
                         $add = "-1";
                     if ($work['state']==2){?>
 <!--                        <form method="POST">-->
-                        <button id="cancelOrder2BT<?=$work['id']?>" onclick="call_customer_cancel(<?=$add?>, <?=$work['id']?>)"
+                        <button id="cancelOrder2BT<?=$work['id']?>" onclick="call_customer_cancel('<?=$add?>', '<?=$work['id']?>')"
                                 class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">Cancel Order</button>
 <!--                        </form>-->
                     <?php } else { ?>
@@ -178,9 +178,9 @@
                                class="w3-col l3 w3-round-large red-border no-border" style="float: right; background-color: transparent">
                     </form>
                 </div>
-                <?php $i++; } }?>
+                <?php $i++; }?>
         </div>
-        <?php if (isset($_SESSION['correctingOpen']) && sizeof($_SESSION['correctingOpen'])>0) {?>
+        <?php } if (isset($_SESSION['correctingOpen']) && sizeof($_SESSION['correctingOpen'])>0) {?>
         <div class="w3-col l12">
             <!--     OPEN-->
             <h2 id="OpenH2" class="w3-text-red">Open</h2>
@@ -207,28 +207,26 @@
                         <input id="downloadFileToCorrectBT<?=$work['id']?>" type="submit" value="Download File"
                                name="downloadToCorrect<?=$work['id']?>"
                                class="w3-col l3 w3-round-large red-border no-border" style="float: left; background-color: transparent">
-                            <button id="cancelMyCorrectionBT<?=$work['id']?>" onclick="call_corrector_cancel(<?=$work['address']?>, <?=$work['id']?>)"
+                            <button id="cancelMyCorrectionBT<?=$work['id']?>" onclick="call_corrector_cancel('<?=$work['address']?>', '<?=$work['id']?>')"
                                     class="w3-col l2 w3-round-large red-border no-border" style="float: right; background-color: transparent">Cancel</button>
-                    </form>
+                        </form>
                         <?php } elseif ($work['state']==3) { ?>
                             <div class="w3-row l8" style="float: left">
-<!--                                <input class="w3-btn w3-col l7 w3-round-large" type="file" name="fileUp--><?//=$work['id']?><!--" value="Upload">-->
-                                <input class="w3-btn w3-col l7 w3-round-large" type="file" name="fileUp<?=$work['id']?>" value="Upload">
+                                <input class="w3-btn w3-col l9 w3-round-large" type="file" name="fileUp<?=$work['id']?>" value="Upload">
                                 <input type="submit" value="Upload" name="UploadFile<?=$work['id']?>"
-                                       class="w3-col l2 w3-round-large red-border no-border" style="background-color: transparent">
-                    </form>
+                                       class="w3-col l2 w3-round-large red-border no-border" style="background-color: transparent; float: right">
                             </div>
-                            <?php if ($work['uploaded_id'] != $work['file_id']) { ?>
                     </form>
-                                <button onclick="call_corrector_done(<?=$work['address']?>)" class="w3-col l2 w3-round-large red-border no-border"
+                            <?php if ($work['uploaded_id'] != $work['file_id']) { ?>
+                                <button onclick="call_corrector_done('<?=$work['address']?>', '<?=$work['id']?>')" class="w3-col l2 w3-round-large red-border no-border"
                                         style="float: right; background: transparent">Confirm</button>
                         <?php } } ?>
 
                 </div>
-                <?php $i++; } }?>
-            <br>
-        </div>
-        <?php if(isset($_SESSION['correctingClosed']) && sizeof($_SESSION['correctingClosed'])>0) {?>
+                <?php $i++; } ?>
+                <br>
+            </div>
+        <?php } if(isset($_SESSION['correctingClosed']) && sizeof($_SESSION['correctingClosed'])>0) {?>
         <div class="w3-col l12">
             <!--     CLOSED-->
             <h2 id="closedH22" class="w3-text-red">Closed</h2>
@@ -259,7 +257,7 @@
                 <?php } else { ?>
                     <div class="w3-col l8 panel" style="text-align: left">
                         <label>Your rating: Waiting for client's review</label>
-                <?php } $i++; } }?>
+                <?php } $i++; }?>
         </div>
     </div>
-<?php } ?>
+<?php } }?>

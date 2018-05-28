@@ -27,7 +27,7 @@ function get_contract_data(){
 }
 
 function prepare_and_deploy(bindId, reqId) {
-    console.log("neco...");
+    // console.log("neco...");
 
     $.post( "?Controller=myOffers", { 'bindId' : bindId , 'reqId' : reqId }, function( data ) {
         console.log(data);
@@ -42,41 +42,55 @@ function prepare_and_deploy(bindId, reqId) {
 
         console.log("Wallet: " + wallet + " //// Wei: " + wei);
 
-        deploy_contract(wallet, deadline, wei, hash, id);
+        deploy_contract(wallet, deadline, wei, hash, id, bindId);
     })// strednik a 'json' chybi zamerne!!!  , 'json');
-    console.log("...econ");
+
+    var inputBtn = document.getElementById("acceptBindBT" + bindId);
+    inputBtn.disabled = true;
+    inputBtn.innerHTML = "Creating...";
 }
 
-function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash, _contract_id){ //from remix, returns address of contract
+function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash, _contract_id, bindId){ //from remix, returns address of contract
     console.log(_korektor + " " + _expiration_date + " " + _platba_wei + " " + _document_hash + " " + _contract_id);
 
 	var contract_address;
 	var abi = get_contract_abi();
 
 	var escrowContract = web3.eth.contract(abi);
+
+
 	var escrow = escrowContract.new(
 		_korektor,
 		_expiration_date,
 		_document_hash,
 		{
 			from: global_account,       //zakaznikova adresa
-			data: get_contract_data(), 
+			data: get_contract_data(),
 			gas: '4200000',
 			value: _platba_wei
-		}, function (e, contract){
+		}, function (e, contract) {
+            var inputBtn = document.getElementById("acceptBindBT" + bindId);
+            inputBtn.disabled = false;
 			console.log(e, contract);
-			if (typeof contract.address !== 'undefined') {
+			if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
 				console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
                 set_latest_contract_address(contract.address, _contract_id);
+
+                inputBtn.innerHTML = "Created!";
 			} else {
                 if (e) {
                     $.post( "?Controller=myOffers", { 'contract_add' : "-1", 'contract_id' : _contract_id }, function (data) {
                         console.log(data);
                     })
                 }
+
+                inputBtn.innerHTML = "Canceled!";
             }
+
+
 		});
 
+    alert("Blockchain is processing your request, PLEASE WAIT until 'Accept' button changes to 'Created'.");
 }
 function get_latest_contract_address(){
     return latest_contract_address;
@@ -126,6 +140,7 @@ Smart contract functions
 
 function call_corrector_cancel(address, contract_id){
 	var escrow = get_contract_at(address);
+	console.log("tralala");
 
 	escrow.corrector_cancel({from: global_account}, function(error, result){
         if(!error) {

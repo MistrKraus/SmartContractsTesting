@@ -27,7 +27,7 @@ class File {
 
     public static function insertCorrectedFile($name, $type, $size, $data, $hash) {
         if (Db::insert("files", array('name'=>$name, 'type'=>$type, 'size'=>$size, 'data'=>$data,
-                'hash'=>$hash) == -1)) {
+                'hash'=>$hash)) == -1) {
             return -1;
         } else {
             return Db::getLastId();

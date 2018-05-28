@@ -19,11 +19,7 @@ class MyOffersController extends Controller {
         $this->loggedOnly();
         $this->checkLogin();
 
-        if (isset($_SESSION['mm']))
-            $this->addMessage($_SESSION['mm']);
-//        unset($_SESSION['test']);
-
-//        $this->addMessage($_SESSION['user_id'] . " " . $_SESSION['username']);
+        unset($_SESSION['mm']);
 //
         $userID = $_SESSION['user_id'];
 
@@ -71,7 +67,7 @@ class MyOffersController extends Controller {
                 foreach ($_SESSION['sentBinds'] as $bind) {
                     if (isset($_POST['rejectBind' . $bind['id']])) {
                         if (Work::rejectBind($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
+                            $this->addMessage("Error");
                         }
 //                        $this->redirect('myOffers');
                     // prijimani nabidky
@@ -153,7 +149,7 @@ class MyOffersController extends Controller {
                 foreach ($_SESSION['correctingBinds'] as $bind) {
                     if (isset($_POST['cancelBind' . $bind['id']])) {
                         if (Work::rejectBind($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
+                            $this->addMessage("Error");
                         }
 //                        $this->redirect('myOffers');
                     }
@@ -184,7 +180,7 @@ class MyOffersController extends Controller {
 
                         $fileId = File::insertCorrectedFile($fileName, $fileType, $fileSize, $fileData, $fileHash);
 
-                        $this->addMessage($fileId);
+//                        $this->addMessage($fileId);
                         if ($fileId == -1)
                             return;
 
@@ -199,7 +195,7 @@ class MyOffersController extends Controller {
             if ($_SESSION['correctingClosed']!=0) {
                 foreach ($_SESSION['correctingClosed'] as $bind) {
                     if(isset($_POST['DownloadToCorrect' . $bind['id']])) {
-                        $this->addMessage($bind['id'] . " ma file " . $bind['file_id']);
+//                        $this->addMessage($bind['id'] . " ma file " . $bind['file_id']);
                         $this->downloadFile($bind['file_id']);
 
 //                        $req = Work::getFilenameToCorrect($bind['id']);
@@ -275,7 +271,7 @@ class MyOffersController extends Controller {
         unset($_SESSION['correctingBinds']);
         foreach ($_SESSION['correctingOpen'] as $fuckmylife){
             unset($fuckmylife);
-            $this->addMessage("aaaa");
+//            $this->addMessage("aaaa");
         }
         unset($_SESSION['correctingOpen']);
         $_SESSION['correctingOpen'] = "";
