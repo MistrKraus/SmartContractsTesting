@@ -18,10 +18,10 @@ class MyOffersController extends Controller {
 
         $this->loggedOnly();
         $this->checkLogin();
-        if (isset($_SESSION['test'])) {
-            $this->addMessage($_SESSION['test']);
-            echo $_SESSION['test'];
-        }
+
+        if (isset($_SESSION['mm']))
+            $this->addMessage($_SESSION['mm']);
+//        unset($_SESSION['test']);
 
 //        $this->addMessage($_SESSION['user_id'] . " " . $_SESSION['username']);
 //
@@ -35,6 +35,11 @@ class MyOffersController extends Controller {
         $_SESSION['correctingBinds'] = Work::getMyBinds($userID);
         $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
         $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
+
+//        var_dump($_SESSION['sentOpen']);
+//
+//        if (isset($_SESSION['sentOpen'][0]['address']))
+//            echo "it is set";
 
         unset($_SESSION['uploadID']);
         unset($_SESSION['userReview']);
@@ -81,16 +86,16 @@ class MyOffersController extends Controller {
                 }
             }
 
-            if($_SESSION['sentOpen']!="") {
-                foreach ($_SESSION['sentOpen'] as $bind) {
-                    if (isset($_POST['cancelOrder' . $bind['id']])) { //pripadne TODO reg. vyrazy
-                        if (Work::rejectBind($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
-                        }
-//                        $this->redirect('myOffers');
-                    }
-                }
-            }
+//            if($_SESSION['sentOpen']!="") {
+//                foreach ($_SESSION['sentOpen'] as $bind) {
+//                    if (isset($_POST['cancelOrder' . $bind['id']])) { //pripadne TODO reg. vyrazy
+//                        if (Work::rejectBind($bind['id']) == -1) {
+//                            $this->addMessage("Chyba");
+//                        }
+////                        $this->redirect('myOffers');
+//                    }
+//                }
+//            }
 
             if($_SESSION['sentClosed']!="") {
                 foreach ($_SESSION['sentClosed'] as $bind) {
@@ -157,12 +162,13 @@ class MyOffersController extends Controller {
 
             if($_SESSION['correctingOpen']!="") {
                 foreach ($_SESSION['correctingOpen'] as $bind) {
-                    if (isset($_POST['cancelMyCorrection' . $bind['id']])) {
-                        if (Work::rejectBind($bind['id']) == -1) {
-                            $this->addMessage("Chyba");
-                        }
-                        // download filu
-                    } elseif (isset($_POST['downloadToCorrect' . $bind['id']])) {
+//                    if (isset($_POST['cancelMyCorrection' . $bind['id']])) {
+//                        if (Work::rejectBind($bind['id']) == -1) {
+//                            $this->addMessage("Chyba");
+//                        }
+//                        // download filu
+//                    } else
+                        if (isset($_POST['downloadToCorrect' . $bind['id']])) {
 //                        $this->addMessage($bind['id'] . " ma file " . $bind['file_id']);
                         $this->downloadFile($bind['file_id']);
                         Work::lockBind($bind['id']);
@@ -182,7 +188,9 @@ class MyOffersController extends Controller {
                         if ($fileId == -1)
                             return;
 
-                        Work::fulfillDemand($bind['id'], $bind['request_id'], $fileId);
+                        Work::mapUploadedFile($bind['request_id'], $fileId);
+
+//                        Work::fulfillDemand($bind['id'], $bind['request_id'], $fileId);
 //                        $this->redirect("fulfillDemand");
                     }
                 }

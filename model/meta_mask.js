@@ -26,21 +26,32 @@ function get_contract_data(){
 	return '0x6080604052604051610644380380610644833981018060405281019080805190602001909291908051820192919060200180518201929190505050336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555082600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600290805190602001906100d19291906100f1565b5080600390805190602001906100e89291906100f1565b50505050610196565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061013257805160ff1916838001178555610160565b82800160010185558215610160579182015b8281111561015f578251825591602001919060010190610144565b5b50905061016d9190610171565b5090565b61019391905b8082111561018f576000816000905550600101610177565b5090565b90565b61049f806101a56000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806325d1fac01461005c578063bf3f2ba4146100ec578063d0b270831461017c575b600080fd5b34801561006857600080fd5b5061007161020c565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100b1578082015181840152602081019050610096565b50505050905090810190601f1680156100de5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156100f857600080fd5b506101016102d8565b6040518080602001828103825283818151815260200191508051906020019080838360005b83811015610141578082015181840152602081019050610126565b50505050905090810190601f16801561016e5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561018857600080fd5b506101916103a5565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156101d15780820151818401526020810190506101b6565b50505050905090810190601f1680156101fe5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b60606000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561029d576000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b6040805190810160405280601981526020017f596f7520617265206e6f742074686520637573746f6d65722e00000000000000815250905090565b6060600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561036a576000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b6040805190810160405280601a81526020017f596f7520617265206e6f742074686520636f72726563746f722e000000000000815250905090565b6060600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561043857600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b6040805190810160405280601a81526020017f596f7520617265206e6f742074686520636f72726563746f722e0000000000008152509050905600a165627a7a72305820722edd394906f776a9d2519164a605ced69509f82c9ab7dfb83943a056c04c460029';
 }
 
-function get_text(section, id) {
-    // var label = document.getElementById(section+"Label"+id);
-    // var deadline = document.getElementById(section+"Deadline"+id);
-    // var eth = document.getElementById(section+"Eth"+id);
-    // var user = document.getElementById(section+"User"+id);
-    //
-    // label.getAttribute("value");
-    // console.log(label+deadline+eth+user);
+function prepare_and_deploy(bindId, reqId) {
+    console.log("neco...");
 
-    $.post( "?Controller=myOffers", function( data ) {
+    $.post( "?Controller=myOffers", { 'bindId' : bindId , 'reqId' : reqId }, function( data ) {
         console.log(data);
-    });
+
+        var temp = data.split(";");
+
+        var wallet = temp[0];
+        var deadline = temp[1];
+        var wei = temp[2] * 1000000000000000000;
+        var hash = temp[3];
+        var id = temp[4];
+
+        if (id == 66 || id === 66) {
+            console.log("Wallet: " + wallet + " //// Wei: " + wei);
+        }
+
+        deploy_contract(wallet, deadline, wei, hash, id);
+    })// strednik a 'json' chybi zamerne!!!  , 'json');
+    console.log("...econ");
 }
 
-function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash){ //from remix, returns address of contract
+function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash, _contract_id){ //from remix, returns address of contract
+    console.log(_korektor + " " + _expiration_date + " " + _platba_wei + " " + _document_hash + " " + _contract_id);
+
 	var contract_address;
 	var abi = get_contract_abi();
 
@@ -50,7 +61,7 @@ function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_has
 		_expiration_date,
 		_document_hash,
 		{
-			from: global_account, //zakaznikovo adresa
+			from: global_account,       //zakaznikova adresa
 			data: get_contract_data(), 
 			gas: '4200000',
 			value: _platba_wei
@@ -58,17 +69,27 @@ function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_has
 			console.log(e, contract);
 			if (typeof contract.address !== 'undefined') {
 				console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
-        set_latest_contract_address(contract.address);
-			}
+                set_latest_contract_address(contract.address, _contract_id);
+			} else {
+                if (e) {
+                    $.post( "?Controller=myOffers", { 'contract_add' : "-1", 'contract_id' : _contract_id }, function (data) {
+                        console.log(data);
+                    })
+                }
+            }
 		});
 
 }
 function get_latest_contract_address(){
     return latest_contract_address;
 }
-function set_latest_contract_address(address){
+function set_latest_contract_address(address, _contract_id){
     latest_contract_address = address;
-    document.getElementById("metamaskaddress").innerHTML = address;
+
+    $.post( "?Controller=myOffers", { 'contract_add' : address, 'contract_id' : _contract_id }, function (data) {
+        console.log(data);
+    })//;
+    // document.getElementById("metamaskaddress").innerHTML = address;
 
 }
 //returns contract instance at given address
@@ -79,23 +100,6 @@ function get_contract_at(address){
 }
 //assks metamask for account
 function set_current_metamask_address(){
-    // document.getElementById("zprava").innerHTML += "!---!";
-    // var data = { id: "d-d-d-dab" };
-    // document.getElementById("username").setAttribute("value", data['id']);
-    // var xhttp = new XMLHttpRequest();
-    // xhttp.onreadystatechange = function() {
-    //     if (this.readyState == 4 && this.status == 200) {
-    //         document.getElementById("demo").innerHTML = "jiný úžasný text";
-    //     }
-    // };
-    // xhttp.open("POST", "demo_post.asp", true);
-    // xhttp.send(data);
-
-    // document.getElementById("metamaskaddress").innerHTML = account;
-    // $.post("controller/LoginController.php", data);
-    // console.log("tamto");
-
-
     web3.eth.getAccounts(function(error, accounts) {
     	update_current_account(accounts[0]);    //executes after metamask provides account
     });
@@ -103,11 +107,11 @@ function set_current_metamask_address(){
 
 function update_current_account(account){
     global_account = account;
-    console.log("->" + account);
+    // console.log("->" + account);
 }
 
 function get_current_metamask_address(){
-    console.log("--", global_account);
+    // console.log("--", global_account);
     return global_account;
 }
 
@@ -122,24 +126,31 @@ Smart contract functions
 *************************/
 // corrector calls function corrector_cancel and money from contract are transfered to customers account
 
-function call_corrector_cancel(address){
+function call_corrector_cancel(address, contract_id){
 	var escrow = get_contract_at(address);
 
 	escrow.corrector_cancel({from: global_account}, function(error, result){
-        if(!error)
-            console.log(result)
+        if(!error) {
+            console.log(result);
+            $.post( "?Controller=myOffers", { 'contract_add' : address, 'cancel_bind_id' : contract_id }, function (data) {
+            })
+        }
         else
             console.error(error);
     });
 }
 
 // corrector calls function corrector_done and money from contract are transfered to his account
-function call_corrector_done(address){
+function call_corrector_done(address, bind_id){
 	var escrow = get_contract_at(address);
 
     var response = escrow.corrector_done({from: global_account}, function(error, result){
-        if(!error)
-            console.log(result)
+        if(!error) {
+            $.post( "?Controller=myOffers", { 'bind_id' : bind_id }, function (data) {
+            })
+
+            console.log(result);
+        }
         else
             console.error(error);
     });
@@ -147,12 +158,20 @@ function call_corrector_done(address){
 }
 // customer calls function customer_cancel and money from contract are transfered to his account
 
-function call_customer_cancel(address){
+function call_customer_cancel(address, contract_id){
+    if (address=="-1") {
+        $.post( "?Controller=myOffers", { 'cancel_bind_id' : contract_id }, function (data) {
+        })
+        return;
+    }
 	var escrow = get_contract_at(address);
 
 	var response = escrow.customer_cancel({from: global_account}, function(error, result){
-        if(!error)
-            console.log(result)
+        if(!error) {
+            console.log(result);
+            $.post( "?Controller=myOffers", { 'contract_add' : address, 'cancel_bind_id' : contract_id }, function (data) {
+            })
+        }
         else
             console.error(error);
     });
