@@ -42,22 +42,24 @@ function prepare_and_deploy(bindId, reqId) {
 
         console.log("Wallet: " + wallet + " //// Wei: " + wei);
 
-        deploy_contract(wallet, deadline, wei, hash, id, bindId);
+        deploy_contract(wallet, deadline, wei, hash, id, bindId, reqId);
     })// strednik a 'json' chybi zamerne!!!  , 'json');
 
     var inputBtn = document.getElementById("acceptBindBT" + bindId);
-    inputBtn.disabled = true;
     inputBtn.innerHTML = "Creating...";
+    inputBtn.disabled = true;
+
 }
 
-function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash, _contract_id, bindId){ //from remix, returns address of contract
+function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_hash, _contract_id, bindId, req_id){ //from remix, returns address of contract
     console.log(_korektor + " " + _expiration_date + " " + _platba_wei + " " + _document_hash + " " + _contract_id);
+
+	var inputBtn = document.getElementById("acceptBindBT" + bindId);
 
 	var contract_address;
 	var abi = get_contract_abi();
 
 	var escrowContract = web3.eth.contract(abi);
-
 
 	var escrow = escrowContract.new(
 		_korektor,
@@ -69,36 +71,41 @@ function deploy_contract(_korektor, _expiration_date, _platba_wei, _document_has
 			gas: '4200000',
 			value: _platba_wei
 		}, function (e, contract) {
-            var inputBtn = document.getElementById("acceptBindBT" + bindId);
-            inputBtn.disabled = false;
+    			inputBtn.disabled = true;
+
 			console.log(e, contract);
 			if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
 				console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
-                set_latest_contract_address(contract.address, _contract_id);
+                set_latest_contract_address(contract.address, _contract_id, bindId, req_id);
 
                 inputBtn.innerHTML = "Created!";
+            //inputBtn.disabled = false;
+		location.reload();
 			} else {
                 if (e) {
                     $.post( "?Controller=myOffers", { 'contract_add' : "-1", 'contract_id' : _contract_id }, function (data) {
                         console.log(data);
                     })
-                }
+
 
                 inputBtn.innerHTML = "Canceled!";
+                //inputBtn.disabled = false;
+		        location.reload();
+                }
             }
 
 
 		});
 
-    alert("Blockchain is processing your request, PLEASE WAIT until 'Accept' button changes to 'Created'.");
+    //alert("Blockchain is processing your request, PLEASE WAIT until 'Accept' button changes to 'Created'.");
 }
 function get_latest_contract_address(){
     return latest_contract_address;
 }
-function set_latest_contract_address(address, _contract_id){
+function set_latest_contract_address(address, _contract_id, bindId, req_id){
     latest_contract_address = address;
 
-    $.post( "?Controller=myOffers", { 'contract_add' : address, 'contract_id' : _contract_id }, function (data) {
+    $.post( "?Controller=myOffers", { 'contract_add' : address, 'contract_id' : _contract_id, 'bindId' : bindId, 'reqId' : req_id }, function (data) {
         console.log(data);
     })//;
     // document.getElementById("metamaskaddress").innerHTML = address;
@@ -140,34 +147,45 @@ Smart contract functions
 
 function call_corrector_cancel(address, contract_id){
 	var escrow = get_contract_at(address);
+	var inputBtn = document.getElementById("cancelMyCorrectionBT" + contract_id);
+
 	console.log("tralala");
 
 	escrow.corrector_cancel({from: global_account}, function(error, result){
         if(!error) {
             console.log(result);
             $.post( "?Controller=myOffers", { 'contract_add' : address, 'cancel_bind_id' : contract_id }, function (data) {
-            })
+            })	    
+	    inputBtn.innerHTML = "Done!";
+            location.reload();
         }
-        else
+        else {
+	    inputBtn.innerHTML = "Error!";
             console.error(error);
+	}
     });
+    //alert("Blockchain is processing your request, PLEASE WAIT until 'Cancel' button changes to 'Done'.");
 }
 
 // corrector calls function corrector_done and money from contract are transfered to his account
 function call_corrector_done(address, bind_id){
-	var escrow = get_contract_at(address);
+	var escrow = get_contract_at(address);	
+	var inputBtn = document.getElementById("confirmOrder2BT" + bind_id);
 
     var response = escrow.corrector_done({from: global_account}, function(error, result){
         if(!error) {
             $.post( "?Controller=myOffers", { 'bind_id' : bind_id }, function (data) {
             })
-
+	    inputBtn.innerHTML = "Done!";
             console.log(result);
+            location.reload();
         }
-        else
+        else {
+	    inputBtn.innerHTML = "Error!";
             console.error(error);
+	}
     });
-
+    //alert("Blockchain is processing your request, PLEASE WAIT until 'Confirm' button changes to 'Done'.");
 }
 // customer calls function customer_cancel and money from contract are transfered to his account
 
@@ -178,17 +196,22 @@ function call_customer_cancel(address, contract_id){
         return;
     }
 	var escrow = get_contract_at(address);
+	var inputBtn = document.getElementById("cancelOrder2BT" + contract_id);
 
 	var response = escrow.customer_cancel({from: global_account}, function(error, result){
         if(!error) {
             console.log(result);
             $.post( "?Controller=myOffers", { 'contract_add' : address, 'cancel_bind_id' : contract_id }, function (data) {
             })
+            inputBtn.innerHTML = "Done!";
+            location.reload();
         }
-        else
+        else {
+            inputBtn.innerHTML = "Error!";
             console.error(error);
+	}
     });
-	
+    //alert("Blockchain is processing your request, PLEASE WAIT until 'Cancel' button changes to 'Done'.");
 }
 
 /**

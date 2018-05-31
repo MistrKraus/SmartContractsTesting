@@ -218,7 +218,7 @@
                             </div>
                     </form>
                             <?php if ($work['uploaded_id'] != $work['file_id']) { ?>
-                                <button onclick="call_corrector_done('<?=$work['address']?>', '<?=$work['id']?>')" class="w3-col l2 w3-round-large red-border no-border"
+                                <button id="confirmOrder2BT<?=$work['id']?>" onclick="call_corrector_done('<?=$work['address']?>', '<?=$work['id']?>')" class="w3-col l2 w3-round-large red-border no-border"
                                         style="float: right; background: transparent">Confirm</button>
                         <?php } } ?>
 

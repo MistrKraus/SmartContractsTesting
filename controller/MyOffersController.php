@@ -32,7 +32,7 @@ class MyOffersController extends Controller {
         $_SESSION['correctingOpen'] = Work::getOpenMyCorrections($userID);
         $_SESSION['correctingClosed'] = Work::getClosedMyCorrections($userID);
 
-//        var_dump($_SESSION['sentOpen']);
+//        var_dump($_SESSION['sentRequests']);
 //
 //        if (isset($_SESSION['sentOpen'][0]['address']))
 //            echo "it is set";

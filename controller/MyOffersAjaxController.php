@@ -6,7 +6,8 @@
  * Time: 20:47
  */
 
-class MyOffersAjaxController extends Controller {
+class MyOffersAjaxController extends Controller
+{
 
     function process($params)
     {
@@ -20,7 +21,7 @@ class MyOffersAjaxController extends Controller {
             if (isset($_POST['bindId']) && isset($_POST['reqId']) && $_POST) {
 //                $_SESSION['test'] = ">>>>>";
                 $id = $_POST['bindId'];
-                Work::acceptBind($id, $_POST['reqId']);
+                //Work::acceptBind($id, $_POST['reqId']);
 
                 $data = Work::GetContractData($id);
 
@@ -32,12 +33,13 @@ class MyOffersAjaxController extends Controller {
             }
 
             // Ulozeni adresy kontraktu do databaze
-            if (isset($_POST['contract_add']) && isset($_POST['contract_id'])) {
+            if (isset($_POST['contract_add']) && isset($_POST['contract_id']) && isset($_POST['bindId']) && isset($_POST['reqId'])) {
                 $address = $_POST['contract_add'];
                 $_SESSION['mm'] = $address;
                 if ($address != "-1") {
 //                    $_SESSION['test'] = "!!!!!";
                     Work::setContractAddress($_POST['contract_id'], $address);
+                    Work::acceptBind($_POST['bindId'], $_POST['reqId']);
                     $_SESSION['mm'] = "spravne" . $_POST['contract_id'];
                     echo "Spravne";
                     return "Spravne";
@@ -68,7 +70,7 @@ class MyOffersAjaxController extends Controller {
         }
 
         echo $output;
-
+        return $output;
 //            if ($_SESSION['sentBinds'] != "" && $_SESSION['sentBinds'] != 1) {
 //
 //                // odmitani nabidky
@@ -101,7 +103,8 @@ class MyOffersAjaxController extends Controller {
 //        }
     }
 
-    function clearController() {
+    function clearController()
+    {
         // TODO: Implement clearController() method.
     }
 }
