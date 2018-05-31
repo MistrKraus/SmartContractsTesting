@@ -52,7 +52,7 @@ function prepare_and_deploy(bindId, reqId) {
 }
 
 function deploy_contract(_korektor, _expiration_time_in_hours, _platba_wei, _document_hash, _contract_id, bindId, req_id){ //from remix, returns address of contract
-    console.log(_korektor + " " + _expiration_date + " " + _platba_wei + " " + _document_hash + " " + _contract_id);
+    console.log(_korektor + " " + _expiration_time_in_hours + " " + _platba_wei + " " + _document_hash + " " + _contract_id);
 
 	var inputBtn = document.getElementById("acceptBindBT" + bindId);
 
